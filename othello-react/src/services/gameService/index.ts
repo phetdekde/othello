@@ -1,12 +1,11 @@
 import { Socket } from "socket.io-client";
 import { IPlayMatrix, IStartGame } from "../../components/game";
 
-//พวก service จะเกี่ยวับ socket.io อย่าง emit กับ on
 class GameService {
     public async joinGameRoom(socket: Socket, roomId: string): Promise<boolean> {
         return new Promise((rs, rj) => {
-            socket.emit('join_game', { roomId }); // .emit คือส่ง , อันนี้จะส่ง message ไปให้ server ว่า roomId ชื่ออะไร
-            socket.on('room_joined', () => rs(true)); // .on จะเป็นตัวรับ message
+            socket.emit('join_game', { roomId });
+            socket.on('room_joined', () => rs(true)); 
             socket.on('room_join_error', ({error}) => rj(error));
         });
     }

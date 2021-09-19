@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-//อย่างอันนี้มันตั้งให้ component App คืออันแรกที่ render
 ReactDOM.render(
   <React.StrictMode>
     <App />

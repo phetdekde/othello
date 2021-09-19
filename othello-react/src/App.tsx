@@ -6,10 +6,9 @@ import { JoinRoom } from './components/JoinRoom';
 import GameContext, { IGameContextProps } from './gameContext';
 import { Game } from './components/game';
 
-//หน้าแรกที่จะ render
 function App() {
   const [isInRoom, setInRoom] = useState(false);
-  const [playerSymbol, setPlayerSymbol] = useState<'x' | 'o'>('x');
+  const [playerColor, setPlayerColor] = useState<1 | 2>(1);
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
 
@@ -29,8 +28,8 @@ function App() {
   const gameContextValue: IGameContextProps = {
     isInRoom,
     setInRoom,
-    playerSymbol,
-    setPlayerSymbol,
+    playerColor,
+    setPlayerColor,
     isPlayerTurn,
     setPlayerTurn,
     isGameStarted,

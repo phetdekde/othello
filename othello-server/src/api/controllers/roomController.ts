@@ -3,7 +3,7 @@ import { Server, Socket } from "socket.io";
 
 @SocketController()
 export class RoomController {
-    @OnMessage('join_game') //รอรับ message join_game (ฝั่ง server)
+    @OnMessage('join_game')
     public async joinGame(
         @SocketIO() io: Server,
         @ConnectedSocket() socket: Socket,
@@ -28,24 +28,24 @@ export class RoomController {
                         Array.from(io.sockets.adapter.rooms.get(message.roomId)),
                         '\n------------------------------------------------------\n\n');
 
-            if(io.sockets.adapter.rooms.get(message.roomId).size === 2) { //คนเริ่ม
+            if(io.sockets.adapter.rooms.get(message.roomId).size === 2) { 
                 let rand = Math.floor(Math.random() * 2);
-                //0 = x เริ่ม
+
                 if(rand === 0) { 
-                    socket.emit('start_game', { start: true, symbol: 'x' }); //ส่งให้ frontend
-                    socket.to(message.roomId).emit('start_game', { start: false, symbol: 'o'}); //ส่งให้อีกคน
+                    socket.emit('start_game', { start: true, color: 1 }); 
+                    socket.to(message.roomId).emit('start_game', { start: false, color: 2}); 
                 } else {
-                    socket.emit('start_game', { start: false, symbol: 'o' });
-                    socket.to(message.roomId).emit('start_game', { start: true, symbol: 'x'});
+                    socket.emit('start_game', { start: false, color: 1 });
+                    socket.to(message.roomId).emit('start_game', { start: true, color: 2});
                 }
 
             }
         }
 
-        socket.on('disconnecting', function() { //รอคน disconnect แล้วมันจะรัน
-            let roomId = Array.from(socket.rooms.values()).filter((r) => r !== socket.id)[0]
+        socket.on('disconnecting', function() { 
+            let socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id)[0]
 
-            socket.to(roomId).emit('left_the_game', { message: 'Your opponent cry and left the game. :('}); //ส่งให้ front
+            socket.to(socketRooms).emit('left_the_game', { message: 'Your opponent cry and left the game. :('});
         });
     }
 }
