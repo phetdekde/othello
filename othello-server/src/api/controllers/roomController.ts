@@ -3,6 +3,12 @@ import { Server, Socket } from "socket.io";
 
 @SocketController()
 export class RoomController {
+    private getSocketGameRoom(socket: Socket): string {
+        const socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id);
+        const gameRoom = socketRooms && socketRooms[0];
+        return gameRoom;
+    }
+
     @OnMessage('join_game')
     public async joinGame(
         @SocketIO() io: Server,
@@ -27,19 +33,6 @@ export class RoomController {
             console.log('------------------------------------------------------\nRoom member = ', 
                         Array.from(io.sockets.adapter.rooms.get(message.roomId)),
                         '\n------------------------------------------------------\n\n');
-
-            if(io.sockets.adapter.rooms.get(message.roomId).size === 2) { 
-                let rand = Math.floor(Math.random() * 2);
-
-                if(rand === 0) { 
-                    socket.emit('start_game', { start: true, color: 1 }); 
-                    socket.to(message.roomId).emit('start_game', { start: false, color: 2}); 
-                } else {
-                    socket.emit('start_game', { start: false, color: 1 });
-                    socket.to(message.roomId).emit('start_game', { start: true, color: 2});
-                }
-
-            }
         }
 
         socket.on('disconnecting', function() { 
@@ -48,4 +41,28 @@ export class RoomController {
             socket.to(socketRooms).emit('left_the_game', { message: 'Your opponent cry and left the game. :('});
         });
     }
+
+    @OnMessage('start_game')
+    public async startGame(
+        @SocketIO() io: Server,
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() message: any
+    ) {
+        const gameRoom = this.getSocketGameRoom(socket);
+        
+        if(io.sockets.adapter.rooms.get(gameRoom).size === 2) { 
+
+            let rand = Math.floor(Math.random() * 2);
+
+            if(rand === 0) { 
+                socket.emit('on_game_start', { start: true, color: 1 }); 
+                socket.to(gameRoom).emit('on_game_start', { start: false, color: 2}); 
+            } else {
+                socket.emit('on_game_start', { start: false, color: 2 });
+                socket.to(gameRoom).emit('on_game_start', { start: true, color: 1});
+            }
+
+        }
+    }
+
 }

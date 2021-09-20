@@ -11,6 +11,8 @@ function App() {
   const [playerColor, setPlayerColor] = useState<1 | 2>(1);
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState('human');
+  const [isGameFinished, setGameFinished] = useState(false);
 
   const connectSocket = async () => {
     const socket = await socketService
@@ -33,7 +35,11 @@ function App() {
     isPlayerTurn,
     setPlayerTurn,
     isGameStarted,
-    setGameStarted
+    setGameStarted,
+    selectedPlayer,
+    setSelectedPlayer,
+    isGameFinished,
+    setGameFinished,
   }
 
   return (

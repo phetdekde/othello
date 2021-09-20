@@ -9,6 +9,10 @@ export interface IGameContextProps {
     setPlayerTurn: (turn: boolean) => void;
     isGameStarted: boolean;
     setGameStarted: (started: boolean) => void;
+    selectedPlayer: string;
+    setSelectedPlayer: (selected: string) => void;
+    isGameFinished: boolean;
+    setGameFinished: (finished: boolean) => void;
 };
 
 const defaultState: IGameContextProps = {
@@ -19,7 +23,11 @@ const defaultState: IGameContextProps = {
     isPlayerTurn: false,
     setPlayerTurn: () => {},
     isGameStarted: false,
-    setGameStarted: () => {}
+    setGameStarted: () => {},
+    selectedPlayer: 'human',
+    setSelectedPlayer: () => {},
+    isGameFinished: false,
+    setGameFinished: () => {},
 };
 
 export default React.createContext(defaultState);

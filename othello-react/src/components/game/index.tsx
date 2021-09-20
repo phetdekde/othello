@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import gameContext from '../../gameContext';
 import reportWebVitals from '../../reportWebVitals';
 import gameService from '../../services/gameService';
@@ -24,13 +24,13 @@ export function Game() {
         [0, 0, 0, 0, 0, 0, 0, 0],
     ]);
 
-    const { playerColor, setPlayerColor, setPlayerTurn, isPlayerTurn, setGameStarted, isGameStarted } = useContext(gameContext);
+    const { playerColor, setPlayerColor, setPlayerTurn, isPlayerTurn, setGameStarted, isGameStarted, selectedPlayer, setSelectedPlayer, isGameFinished, setGameFinished } = useContext(gameContext);
 
-    const hintLayer = useRef(null);
+    const handlePlayerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedPlayer(e.target.value);
+    }
 
     const clickedSquare = (row: number, col: number) => {
-        console.log('row ' + row)
-        console.log('col' + col)
         const newMatrix = [...matrix];
         /*
             If there is no disk there
@@ -40,45 +40,20 @@ export function Game() {
                 return
         */
         if(newMatrix[row][col] !== 0) return;
+        if(!isPlayerTurn) return;
         if(canClickSpot(row, col, playerColor)) {
+            console.log('row ' + row)
+            console.log('col ' + col)
             var affectedDisks = getAffectedDisks(row, col, playerColor);
-            console.log(affectedDisks);
             flipDisks(affectedDisks);
             newMatrix[row][col] = playerColor;
             setMatrix(newMatrix);
 
-            var blackCanMove = canThisPlayerMove(1);
-            console.log('can black move : ' + blackCanMove)
-            var whiteCanMove = canThisPlayerMove(2);
-            console.log('can white move : ' + whiteCanMove)
-            
             if(socketService.socket) {
-                if((playerColor === 1 && whiteCanMove) || (playerColor === 2 && blackCanMove)) {
-                    gameService.updateGame(socketService.socket, newMatrix);
-                } else {
-                    // gameService.updateGame(socketService.socket, newMatrix);
-                    var yourScore = 0;
-                    var enemyScore = 0;
-                    for (let row = 0; row < 8; row++) {
-                        for (let col = 0; col < 8; col++) {
-                            var value = newMatrix[row][col];
-                            if(value === playerColor) yourScore++
-                            else if(value !== playerColor && value !== 0) enemyScore++
-                        }
-                    }
-                    if(yourScore > enemyScore) {
-                        gameService.gameWin(socketService.socket, 'You Lost!\nYour Score:' + enemyScore + '\nEnemy score: ' + yourScore);
-                        alert('You Won!\nYour score: ' + yourScore + '\nEnemy score: ' + enemyScore);
-                    } else if(yourScore < enemyScore){
-                        gameService.gameWin(socketService.socket, 'You Won!\nYour score: ' + enemyScore + '\nEnemy score: ' + yourScore);
-                        alert('You Lost!\nYour score: ' + yourScore + '\nEnemy score: ' + enemyScore);
-                    } else {
-                        gameService.gameWin(socketService.socket, 'Tie!');
-                        alert('Tie!')
-                    }
-                }
-                setPlayerTurn(false);
+                gameService.updateGame(socketService.socket, newMatrix);
             }
+
+            setPlayerTurn(false);
         }
     }
 
@@ -256,16 +231,84 @@ export function Game() {
     }
 
     const canThisPlayerMove = (color: number) => {
-        console.log(matrix)
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
-                if(canClickSpot(row, col, color)) {
-                    console.log(color + ' spot is = row: ' + row + ' | col: ' + col);
+                if(canClickSpot(row, col, color) && matrix[row][col] === 0) {
+                    // clickedSquare(row, col)
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    const simulateMoveAI1 = () => {
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                if(canClickSpot(row, col, playerColor) && matrix[row][col] === 0) {
+                    clickedSquare(row, col)
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    const simulateMoveAI2 = () => {
+        for (let row = 7; row > -1; row--) {
+            for (let col = 7; col > -1; col--) {
+                if(canClickSpot(row, col, playerColor) && matrix[row][col] === 0) {
+                    clickedSquare(row, col)
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    const startGame = () => {
+        if(socketService.socket) {
+            gameService.startGame(socketService.socket, 'start_game');
+        }
+    }
+
+    const resetGame = () => {
+        setMatrix([
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 2, 1, 0, 0, 0],
+            [0, 0, 0, 1, 2, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],  
+        ]);
+        setGameFinished(false);
+        setGameStarted(false);
+        setPlayerTurn(false);
+        if(socketService.socket) {
+            gameService.resetGame(socketService.socket);
+        }
+    }
+
+    const handleGameReset = () => {
+        if(socketService.socket) {
+            gameService.onGameReset(socketService.socket, () => {
+                setMatrix([
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 2, 1, 0, 0, 0],
+                    [0, 0, 0, 1, 2, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0],  
+                ]);
+                setGameFinished(false);
+                setGameStarted(false);
+                setPlayerTurn(false);
+            });
+        }
     }
 
     const handleGameUpdate = () => {
@@ -279,23 +322,20 @@ export function Game() {
 
     const handleGameStart = () => {
         if(socketService.socket)
-            gameService.onStartGame(socketService.socket, (options) => {
+            gameService.onGameStart(socketService.socket, (options) => {
                 setGameStarted(true);
                 setPlayerColor(options.color);
-                if(options.start)
-                    setPlayerTurn(true);
-                else
-                    setPlayerTurn(false);
+                options.start ? setPlayerTurn(true) : setPlayerTurn(false);    
             });
     }
 
-    const handleGameWin = () => {
-        if(socketService.socket)
-            gameService.onGameWin(socketService.socket, (message) => {
-                setPlayerTurn(false);
-                alert(message);
-            });
-    }
+    // const handleGameWin = () => {
+    //     if(socketService.socket)
+    //         gameService.onGameWin(socketService.socket, (message) => {
+    //             setPlayerTurn(false);
+    //             alert(message);
+    //         });
+    // }
 
     const handleDisconnect = () => {
         if(socketService.socket)
@@ -309,37 +349,91 @@ export function Game() {
     useEffect(() => {
         handleGameUpdate();
         handleGameStart();
-        handleGameWin();
+        // handleGameWin();
         handleDisconnect();
+        handleGameReset();
     }, []);
+
+    useEffect(() => {
+        console.log(isPlayerTurn)
+        if(!isPlayerTurn) return;
+        if(canThisPlayerMove(playerColor)) {
+            console.log('can move')
+            if(selectedPlayer !== 'human' && isPlayerTurn) {
+                selectedPlayer === 'ai1' ? simulateMoveAI1() : simulateMoveAI2()
+            }
+        } else {
+            console.log('can not move')
+            var enemyCanMove = canThisPlayerMove(playerColor === 1 ? 2 : 1)
+            if(socketService.socket) {
+                if(enemyCanMove) {
+                    gameService.updateGame(socketService.socket, matrix);
+                    setPlayerTurn(false);
+                } else {
+                    setGameFinished(true);
+                }
+            }
+        }
+    }, [isPlayerTurn])
+
+    useEffect(() => {
+        if(!isGameFinished) return;
+        if(socketService.socket) {
+            gameService.updateGame(socketService.socket, matrix);
+            var yourScore = 0;
+            var enemyScore = 0;
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    var value = matrix[row][col];
+                    if (value === playerColor) yourScore++
+                    else if (value !== playerColor && value !== 0) enemyScore++
+                }
+            }
+            if (yourScore > enemyScore) {
+                alert('You Won!\nYour score: ' + yourScore + '\nEnemy score: ' + enemyScore);
+            } else if (yourScore < enemyScore) {
+                alert('You Lost!\nYour score: ' + yourScore + '\nEnemy score: ' + enemyScore);
+            } else {
+                alert('Tie!')
+            }
+        }
+        setPlayerTurn(false);
+    }, [isGameFinished])
 
     return (
         <>
-        <div style={{display: 'flex', flexDirection: 'column', position: 'relative', alignItems: 'center'}}>
-            {!isGameStarted && <h2>Waiting for other player to join...</h2>}
-            {(isGameStarted) && (isPlayerTurn ? <h2>Your turn {playerColor === 1 ? 'black' : 'white'}</h2> : <h2>Enemy's turn</h2>)}
-            {(!isGameStarted || !isPlayerTurn) && <div style={{width: '100%', height: '100%', position:'absolute', bottom: '0', left: '0', zIndex: 99, cursor: 'default'}}></div>}
-            {matrix.map((row, rowIdx) => {
-                return (
-                    <div style={{display: 'flex'}}>
-                        {row.map((column, columnIdx) => ( 
-                            <div style={{border: '1px solid black', width: '100px', height: '100px', display: 'flex', alignItems: 'center'}} onClick={() => clickedSquare(rowIdx, columnIdx)}>
-                                {column !== 0 ? (
-                                    <Piece color={column}/>
-                                ) : (
-                                    canClickSpot(rowIdx, columnIdx, playerColor) ? (
-                                        <div style={{width: '75%', height: '75%', border: '2px solid gray', zIndex: 2, borderRadius: '50%', margin: '0 auto'}} onClick={() => clickedSquare(rowIdx, columnIdx)}></div>
+            <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', alignItems: 'center' }}>
+                {!isGameStarted && <h2>Waiting for other player to join...</h2>}
+                {(isGameStarted) && (isPlayerTurn ? <h2>Your turn {playerColor === 1 ? 'black' : 'white'}</h2> : <h2>Enemy's turn</h2>)}
+                {(!isGameStarted || !isPlayerTurn) && <div style={{ width: '100%', height: '100%', position: 'absolute', bottom: '0', left: '0', zIndex: 99, cursor: 'default' }}></div>}
+                {matrix.map((row, rowIdx) => {
+                    return (
+                        <div style={{ display: 'flex' }}>
+                            {row.map((column, columnIdx) => (
+                                <div style={{ border: '1px solid black', width: '100px', height: '100px', display: 'flex', alignItems: 'center', backgroundColor: 'green' }} onClick={() => clickedSquare(rowIdx, columnIdx)}>
+                                    {column !== 0 ? (
+                                        <Piece color={column} />
+                                    ) : (
+                                        canClickSpot(rowIdx, columnIdx, playerColor) ? (
+                                            <div style={{ width: '75%', height: '75%', backgroundColor: 'yellow', zIndex: 2, borderRadius: '50%', margin: '0 auto', opacity: '0.8' }} onClick={() => clickedSquare(rowIdx, columnIdx)}></div>
                                         ) : (
-                                        ''
-                                    )
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                )
-            })}
-            <button style={{height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem'}} onClick={() => window.location.reload()}>GO BACK</button>
-        </div>
+                                            ''
+                                        )
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )
+                })}
+                <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} disabled={isGameStarted} onClick={startGame}>START</button>
+                <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} disabled={!isGameFinished} onClick={resetGame}>RESET</button>
+                <select style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} onChange={handlePlayerChange}>
+                    <option value='human'>Human</option>
+                    <option value='ai1'  >AI 1</option>
+                    <option value='ai2'  >AI 2</option>
+                </select>
+                <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} onClick={() => window.location.reload()}>GO BACK</button>
+            </div>
         </>
     )
 }

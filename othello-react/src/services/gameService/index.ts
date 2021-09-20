@@ -18,17 +18,29 @@ class GameService {
         socket.on('on_game_update', ({ matrix }) => listener(matrix));
     }
 
-    public async onStartGame(socket: Socket, listener: (options: IStartGame) => void) {
-        socket.on('start_game', listener);
+    public async startGame(socket: Socket, message: string) {
+        socket.emit('start_game', { message });
     }
 
-    public async gameWin(socket: Socket, message: string) {
-        socket.emit('game_win', { message });
+    public async onGameStart(socket: Socket, listener: (options: IStartGame) => void) {
+        socket.on('on_game_start', listener);
     }
 
-    public async onGameWin(socket: Socket, listener: (message: string) => void) {
-        socket.on('on_game_win', ({ message }) => listener(message));
+    public async resetGame(socket: Socket) {
+        socket.emit('reset_game');
     }
+
+    public async onGameReset(socket: Socket, listener: () => void) {
+        socket.on('on_game_reset', listener);
+    }
+
+    // public async gameWin(socket: Socket, message: string) {
+    //     socket.emit('game_win', { message });
+    // }
+
+    // public async onGameWin(socket: Socket, listener: (message: string) => void) {
+    //     socket.on('on_game_win', ({ message }) => listener(message));
+    // }
 
     public async onDisconnect(socket: Socket, listener: (message: string) => void) {
         socket.on('left_the_game', ({ message }) => listener(message));
