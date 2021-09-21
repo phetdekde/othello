@@ -13,6 +13,16 @@ function App() {
   const [isGameStarted, setGameStarted] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState('human');
   const [isGameFinished, setGameFinished] = useState(false);
+  const [matrix, setMatrix] = useState([
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 2, 1, 0, 0, 0],
+    [0, 0, 0, 1, 2, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
 
   const connectSocket = async () => {
     const socket = await socketService
@@ -40,6 +50,8 @@ function App() {
     setSelectedPlayer,
     isGameFinished,
     setGameFinished,
+    matrix,
+    setMatrix,
   }
 
   return (

@@ -4,6 +4,7 @@ import reportWebVitals from '../../reportWebVitals';
 import gameService from '../../services/gameService';
 import socketService from '../../services/socketService';
 import Piece from './Piece';
+import gameLogic from './gameLogic'
 
 export type IPlayMatrix = Array<Array<number>>;
 export interface IStartGame {
@@ -13,18 +14,25 @@ export interface IStartGame {
 
 export function Game() {
 
-    const [matrix, setMatrix] = useState<IPlayMatrix>([
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 2, 1, 0, 0, 0],
-        [0, 0, 0, 1, 2, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-    ]);
+    // const [matrix, setMatrix] = useState<IPlayMatrix>([
+    //     [0, 0, 0, 0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0, 0, 0, 0],
+    //     [0, 0, 0, 2, 1, 0, 0, 0],
+    //     [0, 0, 0, 1, 2, 0, 0, 0],
+    //     [0, 0, 0, 0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0, 0, 0, 0],
+    //     [0, 0, 0, 0, 0, 0, 0, 0],
+    // ]);
 
-    const { playerColor, setPlayerColor, setPlayerTurn, isPlayerTurn, setGameStarted, isGameStarted, selectedPlayer, setSelectedPlayer, isGameFinished, setGameFinished } = useContext(gameContext);
+    const { 
+        matrix,         setMatrix,
+        playerColor,    setPlayerColor, 
+        isPlayerTurn,   setPlayerTurn,
+        isGameStarted,  setGameStarted,
+        selectedPlayer, setSelectedPlayer, 
+        isGameFinished, setGameFinished, 
+    } = useContext(gameContext);
 
     const handlePlayerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedPlayer(e.target.value);
