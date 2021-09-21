@@ -4,7 +4,7 @@ import reportWebVitals from '../../reportWebVitals';
 import gameService from '../../services/gameService';
 import socketService from '../../services/socketService';
 import Piece from './Piece';
-import gameLogic from './gameLogic'
+import { GameLogic } from './gameLogic'
 
 export type IPlayMatrix = Array<Array<number>>;
 export interface IStartGame {
@@ -13,17 +13,6 @@ export interface IStartGame {
 }
 
 export function Game() {
-
-    // const [matrix, setMatrix] = useState<IPlayMatrix>([
-    //     [0, 0, 0, 0, 0, 0, 0, 0],
-    //     [0, 0, 0, 0, 0, 0, 0, 0],
-    //     [0, 0, 0, 0, 0, 0, 0, 0],
-    //     [0, 0, 0, 2, 1, 0, 0, 0],
-    //     [0, 0, 0, 1, 2, 0, 0, 0],
-    //     [0, 0, 0, 0, 0, 0, 0, 0],
-    //     [0, 0, 0, 0, 0, 0, 0, 0],
-    //     [0, 0, 0, 0, 0, 0, 0, 0],
-    // ]);
 
     const { 
         matrix,         setMatrix,
@@ -79,148 +68,71 @@ export function Game() {
        else return true;
     }
 
+    const iterator = (row: number, rd: number, col: number, cd: number, color: number, affectedDisks: object[]) => {
+        // ซ้ายขวา
+        if(cd !== 0 && rd === 0) affectedDisks = getCouldBeAffected(row, rd, col, cd, color, affectedDisks);
+
+        // บนล่าง
+        if(rd !== 0 && cd ===0) affectedDisks = getCouldBeAffected(row, rd, col, cd, color, affectedDisks);
+
+        //เฉียง
+        if(cd !== 0 && rd !== 0) affectedDisks = getCouldBeAffected(row, rd, col, cd, color, affectedDisks);
+
+        return affectedDisks;
+    }
+
+    const getCouldBeAffected = (row: number, rd: number, col: number, cd: number, color: number, affectedDisks: object[]) => {
+        var couldBeAffected:object[] = [];
+
+        var columnIterator = col, rowIterator = row;
+        while(
+            ((rowIterator    < 7 && rd === 1) || (rowIterator    > 0 && !(rd === 1)))
+                                            &&
+            ((columnIterator < 7 && cd === 1) || (columnIterator > 0 && !(cd === 1)))           
+        ) {
+            columnIterator += cd;
+            rowIterator += rd;
+            var valueAtSpot = matrix[rowIterator][columnIterator];
+
+            if (valueAtSpot === 0 || valueAtSpot === color) {
+                if (valueAtSpot === color) {
+                    affectedDisks = affectedDisks.concat(couldBeAffected);
+                }
+                break;
+            } else {
+                var diskLocation = { row: rowIterator, col: columnIterator }
+                couldBeAffected.push(diskLocation);
+            }
+        }
+        return affectedDisks;
+    }
+
     const getAffectedDisks = (row: number, col: number, color: number) => {
         var affectedDisks:object[] = [];
 
-        //left to right
-        var couldBeAffected:object[] = [];
-        var columnIterator = col;
-        while(columnIterator < 7) {
-            columnIterator++;
-            var valueAtSpot = matrix[row][columnIterator];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: row, col: columnIterator}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //left to right (r=0 c=1)
+        affectedDisks = iterator(row, 0, col, 1, color, affectedDisks);
 
-        //right to left
-        var couldBeAffected:object[] = [];
-        var columnIterator = col;
-        while(columnIterator > 0) {
-            columnIterator--;
-            var valueAtSpot = matrix[row][columnIterator];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: row, col: columnIterator}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //right to left (r=0 c=-1)
+        affectedDisks = iterator(row, 0, col, -1, color, affectedDisks);
 
-        //down to up
-        var couldBeAffected:object[] = [];
-        var rowIterator = row;
-        while(rowIterator > 0) {
-            rowIterator--;
-            var valueAtSpot = matrix[rowIterator][col];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: rowIterator, col: col}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //down to up (r=-1 c=0)
+        affectedDisks = iterator(row, -1, col, 0, color, affectedDisks);
 
-        //up to down
-        var couldBeAffected:object[] = [];
-        var rowIterator = row;
-        while(rowIterator < 7) {
-            rowIterator++;
-            var valueAtSpot = matrix[rowIterator][col];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: rowIterator, col: col}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //up to down (r=1 c=0)
+        affectedDisks = iterator(row, 1, col, 0, color, affectedDisks);
 
-        //down right
-        var couldBeAffected:object[] = [];
-        var rowIterator = row, columnIterator = col;
-        while(rowIterator < 7 && columnIterator < 7) {
-            rowIterator++;
-            columnIterator++;
-            var valueAtSpot = matrix[rowIterator][columnIterator];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: rowIterator, col: columnIterator}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //down right (r=1 c=1)
+        affectedDisks = iterator(row, 1, col, 1, color, affectedDisks);
 
-        //down left
-        var couldBeAffected:object[] = [];
-        var rowIterator = row, columnIterator = col;
-        while(rowIterator < 7 && columnIterator > 0) {
-            rowIterator++;
-            columnIterator--;
-            var valueAtSpot = matrix[rowIterator][columnIterator];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: rowIterator, col: columnIterator}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //down left (r=1 c=-1)
+        affectedDisks = iterator(row, 1, col, -1, color, affectedDisks);
 
-        //up left
-        var couldBeAffected:object[] = [];
-        var rowIterator = row, columnIterator = col;
-        while(rowIterator > 0 && columnIterator > 0) {
-            rowIterator--;
-            columnIterator--;
-            var valueAtSpot = matrix[rowIterator][columnIterator];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: rowIterator, col: columnIterator}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //up left (r=-1 c=-1)
+        affectedDisks = iterator(row, -1, col, -1, color, affectedDisks);
 
-        //up right
-        var couldBeAffected:object[] = [];
-        var rowIterator = row, columnIterator = col;
-        while(rowIterator > 0 && columnIterator < 7) {
-            rowIterator--;
-            columnIterator++;
-            var valueAtSpot = matrix[rowIterator][columnIterator];
-            if(valueAtSpot === 0 || valueAtSpot === color) {
-                if(valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = {row: rowIterator, col: columnIterator}
-                couldBeAffected.push(diskLocation);
-            }
-        }
+        //up right (r=-1 c=1)
+        affectedDisks = iterator(row, -1, col, 1, color, affectedDisks);
 
         return affectedDisks;
     }
@@ -337,14 +249,6 @@ export function Game() {
             });
     }
 
-    // const handleGameWin = () => {
-    //     if(socketService.socket)
-    //         gameService.onGameWin(socketService.socket, (message) => {
-    //             setPlayerTurn(false);
-    //             alert(message);
-    //         });
-    // }
-
     const handleDisconnect = () => {
         if(socketService.socket)
             gameService.onDisconnect(socketService.socket, (message) => {
@@ -357,16 +261,13 @@ export function Game() {
     useEffect(() => {
         handleGameUpdate();
         handleGameStart();
-        // handleGameWin();
         handleDisconnect();
         handleGameReset();
     }, []);
 
     useEffect(() => {
-        console.log(isPlayerTurn)
         if(!isPlayerTurn) return;
         if(canThisPlayerMove(playerColor)) {
-            console.log('can move')
             if(selectedPlayer !== 'human' && isPlayerTurn) {
                 selectedPlayer === 'ai1' ? simulateMoveAI1() : simulateMoveAI2()
             }
