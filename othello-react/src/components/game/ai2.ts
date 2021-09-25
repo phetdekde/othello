@@ -7,10 +7,10 @@ export class AI2 {
         this.gameLogic = GameLogic;
     }
 
-    public ai2Called(playerColor: number) {
+    public ai2Called(color: number) {
         for (let row = 7; row > -1; row--) {
             for (let col = 7; col > -1; col--) {
-                if(this.gameLogic.canClickSpot(row, col, playerColor)) {
+                if(this.gameLogic.canClickSpot(row, col, color)) {
                     return {row, col};
                 }
             }

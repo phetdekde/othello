@@ -25,14 +25,14 @@ export class GameLogic {
         return this.matrix;
     }
 
-    public getPos(playerColor: number) {
+    public getPos(color: number) {
         // return Array<Array<number>> of black(1) or white(2)
         // ex. [[1, 2], [3, 4], [row, col], ...]
-        return playerColor === 1 ? this.blackPos : this.whitePos;
+        return color === 1 ? this.blackPos : this.whitePos;
     }
 
-    public getScore(playerColor: number) {
-        return playerColor === 1 ? this.blackPos.length : this.whitePos.length;
+    public getScore(color: number) {
+        return color === 1 ? this.blackPos.length : this.whitePos.length;
     }
 
     public canClickSpot(row: number, col: number, color: number) {
@@ -153,11 +153,11 @@ export class GameLogic {
         return false;
     }
 
-    public getMovableCell(playerColor: number) {
+    public getMovableCell(color: number) {
         var movable = [];
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
-                if(this.canClickSpot(row, col, playerColor)) movable.push([row, col]);
+                if(this.canClickSpot(row, col, color)) movable.push([row, col]);
             }
         }
         return movable;
@@ -167,12 +167,12 @@ export class GameLogic {
         return this.blackPos.length === 0 || this.whitePos.length === 0 || this.blackPos.length + this.whitePos.length === 64;
     }
 
-    public move(row: number, col: number, playerColor: number) {
+    public move(row: number, col: number, color: number) {
         if(this.matrix[row][col] !== 0) return this;
-        var captured = this.getAffectedDisks(row, col, playerColor);
+        var captured = this.getAffectedDisks(row, col, color);
         if(captured.length !== 0) {
             this.flipDisks(captured);
-            this.matrix[row][col] = playerColor;
+            this.matrix[row][col] = color;
         }
         return this;
     }

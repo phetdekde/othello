@@ -31,22 +31,21 @@ export class RoomController {
             socket.emit("room_joined");
 
             console.log('------------------------------------------------------\nRoom member = ', 
-                        Array.from(io.sockets.adapter.rooms.get(message.roomId)),
+                        Array.from(connectedSockets),
                         '\n------------------------------------------------------\n\n');
+
+            if(connectedSockets.size === 2) {
+                const gameRoom = this.getSocketGameRoom(socket);
+                socket.emit('ready_to_start');
+                socket.to(gameRoom).emit('ready_to_start');
+            }
         }
-
-        socket.on('disconnecting', function() { 
-            let socketRoom = Array.from(socket.rooms.values()).filter((r) => r !== socket.id)[0]
-
-            socket.to(socketRoom).emit('left_the_game', { message: 'Your opponent cry and left the game. :('});
-        });
     }
 
     @OnMessage('start_game')
-    public async startGame(
+    public startGame(
         @SocketIO() io: Server,
-        @ConnectedSocket() socket: Socket,
-        @MessageBody() message: any
+        @ConnectedSocket() socket: Socket
     ) {
         const gameRoom = this.getSocketGameRoom(socket);
         
@@ -55,14 +54,14 @@ export class RoomController {
             let rand = Math.floor(Math.random() * 2);
 
             if(rand === 0) { 
+                //to the sender
                 socket.emit('on_game_start', { start: true, color: 1 }); 
+                //to all clients in gameRoom EXCEPT the sender
                 socket.to(gameRoom).emit('on_game_start', { start: false, color: 2}); 
             } else {
                 socket.emit('on_game_start', { start: false, color: 2 });
                 socket.to(gameRoom).emit('on_game_start', { start: true, color: 1});
             }
-
         }
     }
-
 }

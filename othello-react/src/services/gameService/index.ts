@@ -10,6 +10,10 @@ class GameService {
         });
     }
 
+    public async onRoomJoined(socket: Socket, listener: () => void) {
+        socket.on('ready_to_start', listener);
+    }
+
     public async updateGame(socket: Socket, gameMatrix: IPlayMatrix) {
         socket.emit('update_game', { matrix: gameMatrix });
     }
@@ -33,14 +37,6 @@ class GameService {
     public async onGameReset(socket: Socket, listener: () => void) {
         socket.on('on_game_reset', listener);
     }
-
-    // public async gameWin(socket: Socket, message: string) {
-    //     socket.emit('game_win', { message });
-    // }
-
-    // public async onGameWin(socket: Socket, listener: (message: string) => void) {
-    //     socket.on('on_game_win', ({ message }) => listener(message));
-    // }
 
     public async onDisconnect(socket: Socket, listener: (message: string) => void) {
         socket.on('left_the_game', ({ message }) => listener(message));

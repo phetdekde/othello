@@ -56,7 +56,7 @@ function App() {
 
   return (
     <GameContext.Provider value={gameContextValue}> 
-      <h1 style={{textAlign: 'center'}}>Welcome to Tic-Tac-Toe</h1>
+      <h1 style={{textAlign: 'center'}}>Welcome to Othello</h1>
       { !isInRoom && <JoinRoom/> }
       { isInRoom && <Game/> }
     </GameContext.Provider>

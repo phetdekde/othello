@@ -7,6 +7,7 @@ import Piece from './Piece';
 import { GameLogic } from './gameLogic'
 import { AI1 } from './ai1';
 import { AI2 } from './ai2';
+import './game.css'
 
 export type IPlayMatrix = Array<Array<number>>;
 export interface IStartGame {
@@ -15,6 +16,8 @@ export interface IStartGame {
 }
 
 export function Game() {
+
+    const [isReady, setReady] = useState(false);
 
     const { 
         matrix,         setMatrix,
@@ -53,6 +56,14 @@ export function Game() {
 
             setPlayerTurn(false);
             setMatrix(newMatrix);
+        }
+    }
+
+    const handleRoomJoined = () => {
+        if(socketService.socket) {
+            gameService.onRoomJoined(socketService.socket, () => {
+                setReady(true);
+            })
         }
     }
 
@@ -120,10 +131,11 @@ export function Game() {
     }
 
     useEffect(() => {
-        handleGameUpdate();
+        handleRoomJoined();
         handleGameStart();
-        handleDisconnect();
+        handleGameUpdate();
         handleGameReset();
+        handleDisconnect();
     }, []);
 
     useEffect(() => {
@@ -176,20 +188,20 @@ export function Game() {
 
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', alignItems: 'center' }}>
-                {!isGameStarted && <h2>Waiting for other player to join...</h2>}
-                {(isGameStarted) && (isPlayerTurn ? <h2>Your turn {playerColor === 1 ? 'black' : 'white'}</h2> : <h2>Enemy's turn</h2>)}
-                {(!isGameStarted || !isPlayerTurn) && <div style={{ width: '100%', height: '100%', position: 'absolute', bottom: '0', left: '0', zIndex: 99, cursor: 'default' }}></div>}
+            <div className='game'>
+                {!isReady ? <h2>Waiting for other player to join...</h2> : <h2>Player joined!</h2>}
+                {isGameStarted && (isPlayerTurn ? <h2>Your turn {playerColor === 1 ? 'black' : 'white'}</h2> : <h2>Enemy's turn</h2>)}
+                {(!isGameStarted || !isPlayerTurn) && <div className='overlay'></div>}
                 {matrix.map((row, rowIdx) => {
                     return (
                         <div style={{ display: 'flex' }}>
                             {row.map((column, columnIdx) => (
-                                <div style={{ border: '1px solid black', width: '100px', height: '100px', display: 'flex', alignItems: 'center', backgroundColor: 'green' }} onClick={() => clickedSquare(rowIdx, columnIdx)}>
+                                <div className='cell' onClick={() => clickedSquare(rowIdx, columnIdx)}>
                                     {column !== 0 ? (
                                         <Piece color={column} />
                                     ) : (
                                         gameLogic.canClickSpot(rowIdx, columnIdx, playerColor) && isPlayerTurn ? (
-                                            <div style={{ width: '75%', height: '75%', backgroundColor: 'yellow', zIndex: 2, borderRadius: '50%', margin: '0 auto', opacity: '0.8' }} ></div>
+                                            <Piece color={column} />
                                         ) : (
                                             ''
                                         ) 
@@ -199,14 +211,14 @@ export function Game() {
                         </div>
                     )
                 })}
-                <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} disabled={isGameStarted} onClick={startGame}>START</button>
-                <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} disabled={!isGameFinished} onClick={resetGame}>RESET</button>
-                <select disabled={isGameStarted} style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} onChange={handlePlayerChange}>
+                <button className='button' disabled={isGameStarted || !isReady} onClick={startGame}>START</button>
+                <button className='button' disabled={!isGameFinished} onClick={resetGame}>RESET</button>
+                <select className='dropdown' disabled={isGameStarted} onChange={handlePlayerChange}>
                     <option value='human'>Human</option>
                     <option value='ai1'  >AI 1</option>
                     <option value='ai2'  >AI 2</option>
                 </select>
-                <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} onClick={() => window.location.reload()}>GO BACK</button>
+                <button className='button' onClick={() => window.location.reload()}>GO BACK</button>
             </div>
         </>
     )
