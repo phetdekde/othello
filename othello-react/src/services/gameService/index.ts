@@ -18,8 +18,8 @@ class GameService {
         socket.on('on_game_update', ({ matrix }) => listener(matrix));
     }
 
-    public async startGame(socket: Socket, message: string) {
-        socket.emit('start_game', { message });
+    public async startGame(socket: Socket) {
+        socket.emit('start_game');
     }
 
     public async onGameStart(socket: Socket, listener: (options: IStartGame) => void) {

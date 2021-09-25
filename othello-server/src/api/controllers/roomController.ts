@@ -36,9 +36,9 @@ export class RoomController {
         }
 
         socket.on('disconnecting', function() { 
-            let socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id)[0]
+            let socketRoom = Array.from(socket.rooms.values()).filter((r) => r !== socket.id)[0]
 
-            socket.to(socketRooms).emit('left_the_game', { message: 'Your opponent cry and left the game. :('});
+            socket.to(socketRoom).emit('left_the_game', { message: 'Your opponent cry and left the game. :('});
         });
     }
 

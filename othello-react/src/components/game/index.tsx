@@ -5,6 +5,8 @@ import gameService from '../../services/gameService';
 import socketService from '../../services/socketService';
 import Piece from './Piece';
 import { GameLogic } from './gameLogic'
+import { AI1 } from './ai1';
+import { AI2 } from './ai2';
 
 export type IPlayMatrix = Array<Array<number>>;
 export interface IStartGame {
@@ -23,176 +25,53 @@ export function Game() {
         isGameFinished, setGameFinished, 
     } = useContext(gameContext);
 
+    var gameLogic = new GameLogic(matrix);
+
     const handlePlayerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedPlayer(e.target.value);
     }
 
-    const clickedSquare = (row: number, col: number) => {
-        const newMatrix = [...matrix];
+    const clickedSquare = (row: number, col: number) => { 
         /*
-            If there is no disk there
-                get all of the affected disks
-                flip them
-            else
+            if there is a disk there already OR it's not your turn
                 return
+            if that spot can flip other disks
+                flip them
+                update the board
+                change turn
         */
-        if(newMatrix[row][col] !== 0) return;
-        if(!isPlayerTurn) return;
-        if(canClickSpot(row, col, playerColor)) {
-            console.log('row ' + row)
-            console.log('col ' + col)
-            var affectedDisks = getAffectedDisks(row, col, playerColor);
-            flipDisks(affectedDisks);
-            newMatrix[row][col] = playerColor;
-            setMatrix(newMatrix);
 
+        if(matrix[row][col] !== 0 || !isPlayerTurn) return;
+
+        var affectedDisks = gameLogic.getAffectedDisks(row, col, playerColor);
+        if(affectedDisks.length !== 0) {
+
+            var newMatrix = gameLogic.move(row, col, playerColor).getBoard();
             if(socketService.socket) {
-                gameService.updateGame(socketService.socket, newMatrix);
+                gameService.updateGame(socketService.socket, matrix);
             }
 
             setPlayerTurn(false);
+            setMatrix(newMatrix);
         }
-    }
-
-    const canClickSpot = (row: number, col: number, color: number) => {
-        /*
-            If length of affected disks by clicking this spot is 0
-                return false
-            otherwise 
-                return true
-        */
-       var affectedDisks = getAffectedDisks(row, col, color);
-       if(affectedDisks.length === 0) {
-           return false;
-       }
-       else return true;
-    }
-
-    const iterator = (row: number, rd: number, col: number, cd: number, color: number, affectedDisks: object[]) => {
-        // ซ้ายขวา
-        if(cd !== 0 && rd === 0) affectedDisks = getCouldBeAffected(row, rd, col, cd, color, affectedDisks);
-
-        // บนล่าง
-        if(rd !== 0 && cd ===0) affectedDisks = getCouldBeAffected(row, rd, col, cd, color, affectedDisks);
-
-        //เฉียง
-        if(cd !== 0 && rd !== 0) affectedDisks = getCouldBeAffected(row, rd, col, cd, color, affectedDisks);
-
-        return affectedDisks;
-    }
-
-    const getCouldBeAffected = (row: number, rd: number, col: number, cd: number, color: number, affectedDisks: object[]) => {
-        var couldBeAffected:object[] = [];
-
-        var columnIterator = col, rowIterator = row;
-        while(
-            ((rowIterator    < 7 && rd === 1) || (rowIterator    > 0 && !(rd === 1)))
-                                            &&
-            ((columnIterator < 7 && cd === 1) || (columnIterator > 0 && !(cd === 1)))           
-        ) {
-            columnIterator += cd;
-            rowIterator += rd;
-            var valueAtSpot = matrix[rowIterator][columnIterator];
-
-            if (valueAtSpot === 0 || valueAtSpot === color) {
-                if (valueAtSpot === color) {
-                    affectedDisks = affectedDisks.concat(couldBeAffected);
-                }
-                break;
-            } else {
-                var diskLocation = { row: rowIterator, col: columnIterator }
-                couldBeAffected.push(diskLocation);
-            }
-        }
-        return affectedDisks;
-    }
-
-    const getAffectedDisks = (row: number, col: number, color: number) => {
-        var affectedDisks:object[] = [];
-
-        //left to right (r=0 c=1)
-        affectedDisks = iterator(row, 0, col, 1, color, affectedDisks);
-
-        //right to left (r=0 c=-1)
-        affectedDisks = iterator(row, 0, col, -1, color, affectedDisks);
-
-        //down to up (r=-1 c=0)
-        affectedDisks = iterator(row, -1, col, 0, color, affectedDisks);
-
-        //up to down (r=1 c=0)
-        affectedDisks = iterator(row, 1, col, 0, color, affectedDisks);
-
-        //down right (r=1 c=1)
-        affectedDisks = iterator(row, 1, col, 1, color, affectedDisks);
-
-        //down left (r=1 c=-1)
-        affectedDisks = iterator(row, 1, col, -1, color, affectedDisks);
-
-        //up left (r=-1 c=-1)
-        affectedDisks = iterator(row, -1, col, -1, color, affectedDisks);
-
-        //up right (r=-1 c=1)
-        affectedDisks = iterator(row, -1, col, 1, color, affectedDisks);
-
-        return affectedDisks;
-    }
-
-    const flipDisks = (affectedDisks: Array<any>) => {
-        /*
-            for all items in affectDisks
-                if the disk at that spot has value 1
-                    make it 2
-                else
-                    make it 2
-        */
-       affectedDisks.forEach(e => {
-           matrix[e.row][e.col] === 1 ? matrix[e.row][e.col] = 2 : matrix[e.row][e.col] = 1;
-        });
-    }
-
-    const canThisPlayerMove = (color: number) => {
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                if(canClickSpot(row, col, color) && matrix[row][col] === 0) {
-                    // clickedSquare(row, col)
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    const simulateMoveAI1 = () => {
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                if(canClickSpot(row, col, playerColor) && matrix[row][col] === 0) {
-                    clickedSquare(row, col)
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    const simulateMoveAI2 = () => {
-        for (let row = 7; row > -1; row--) {
-            for (let col = 7; col > -1; col--) {
-                if(canClickSpot(row, col, playerColor) && matrix[row][col] === 0) {
-                    clickedSquare(row, col)
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     const startGame = () => {
         if(socketService.socket) {
-            gameService.startGame(socketService.socket, 'start_game');
+            gameService.startGame(socketService.socket);
         }
     }
 
-    const resetGame = () => {
+    const handleGameStart = () => {
+        if(socketService.socket)
+            gameService.onGameStart(socketService.socket, (options) => {
+                setGameStarted(true);
+                setPlayerColor(options.color);
+                options.start ? setPlayerTurn(true) : setPlayerTurn(false);    
+            });
+    }
+
+    const resetGameState = () => {
         setMatrix([
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -206,6 +85,10 @@ export function Game() {
         setGameFinished(false);
         setGameStarted(false);
         setPlayerTurn(false);
+    }
+
+    const resetGame = () => {
+        resetGameState();
         if(socketService.socket) {
             gameService.resetGame(socketService.socket);
         }
@@ -214,19 +97,7 @@ export function Game() {
     const handleGameReset = () => {
         if(socketService.socket) {
             gameService.onGameReset(socketService.socket, () => {
-                setMatrix([
-                    [0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 2, 1, 0, 0, 0],
-                    [0, 0, 0, 1, 2, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0],  
-                ]);
-                setGameFinished(false);
-                setGameStarted(false);
-                setPlayerTurn(false);
+                resetGameState();
             });
         }
     }
@@ -235,17 +106,7 @@ export function Game() {
         if(socketService.socket)
             gameService.onGameUpdate(socketService.socket, (newMatrix) => {
                 setMatrix(newMatrix);
-                // checkGameState(newMatrix);
                 setPlayerTurn(true);
-            });
-    }
-
-    const handleGameStart = () => {
-        if(socketService.socket)
-            gameService.onGameStart(socketService.socket, (options) => {
-                setGameStarted(true);
-                setPlayerColor(options.color);
-                options.start ? setPlayerTurn(true) : setPlayerTurn(false);    
             });
     }
 
@@ -267,15 +128,26 @@ export function Game() {
 
     useEffect(() => {
         if(!isPlayerTurn) return;
-        if(canThisPlayerMove(playerColor)) {
-            if(selectedPlayer !== 'human' && isPlayerTurn) {
-                selectedPlayer === 'ai1' ? simulateMoveAI1() : simulateMoveAI2()
+        if(gameLogic.getMovableCell(playerColor).length !== 0) {
+            if(selectedPlayer !== 'human') {
+                if(selectedPlayer === 'ai1') {
+                    var ai1 = new AI1(gameLogic);
+                    var pos = ai1.ai1Called(playerColor);
+                    if(pos !== undefined) {
+                        clickedSquare(pos.row, pos.col)
+                    }
+                } else {
+                    var ai2 = new AI2(gameLogic);
+                    var pos = ai2.ai2Called(playerColor);
+                    if(pos !== undefined) {
+                        clickedSquare(pos.row, pos.col)
+                    }
+                }
             }
         } else {
-            console.log('can not move')
-            var enemyCanMove = canThisPlayerMove(playerColor === 1 ? 2 : 1)
+            console.log('I cannot move')
             if(socketService.socket) {
-                if(enemyCanMove) {
+                if(gameLogic.getMovableCell(playerColor === 1 ? 2 : 1).length !== 0) {
                     gameService.updateGame(socketService.socket, matrix);
                     setPlayerTurn(false);
                 } else {
@@ -289,19 +161,12 @@ export function Game() {
         if(!isGameFinished) return;
         if(socketService.socket) {
             gameService.updateGame(socketService.socket, matrix);
-            var yourScore = 0;
-            var enemyScore = 0;
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
-                    var value = matrix[row][col];
-                    if (value === playerColor) yourScore++
-                    else if (value !== playerColor && value !== 0) enemyScore++
-                }
-            }
-            if (yourScore > enemyScore) {
-                alert('You Won!\nYour score: ' + yourScore + '\nEnemy score: ' + enemyScore);
-            } else if (yourScore < enemyScore) {
-                alert('You Lost!\nYour score: ' + yourScore + '\nEnemy score: ' + enemyScore);
+            var blackScore = gameLogic.getScore(1);
+            var whiteScore = gameLogic.getScore(2);
+            if (blackScore > whiteScore) {
+                alert('Black Won!\nBlack score: ' + blackScore + '\nWhite score: ' + whiteScore);
+            } else if (blackScore < whiteScore) {
+                alert('White Won!\nWhite score: ' + whiteScore + '\nBlack score: ' + blackScore);
             } else {
                 alert('Tie!')
             }
@@ -323,11 +188,11 @@ export function Game() {
                                     {column !== 0 ? (
                                         <Piece color={column} />
                                     ) : (
-                                        canClickSpot(rowIdx, columnIdx, playerColor) ? (
-                                            <div style={{ width: '75%', height: '75%', backgroundColor: 'yellow', zIndex: 2, borderRadius: '50%', margin: '0 auto', opacity: '0.8' }} onClick={() => clickedSquare(rowIdx, columnIdx)}></div>
+                                        gameLogic.canClickSpot(rowIdx, columnIdx, playerColor) && isPlayerTurn ? (
+                                            <div style={{ width: '75%', height: '75%', backgroundColor: 'yellow', zIndex: 2, borderRadius: '50%', margin: '0 auto', opacity: '0.8' }} ></div>
                                         ) : (
                                             ''
-                                        )
+                                        ) 
                                     )}
                                 </div>
                             ))}
@@ -336,7 +201,7 @@ export function Game() {
                 })}
                 <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} disabled={isGameStarted} onClick={startGame}>START</button>
                 <button style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} disabled={!isGameFinished} onClick={resetGame}>RESET</button>
-                <select style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} onChange={handlePlayerChange}>
+                <select disabled={isGameStarted} style={{ height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem' }} onChange={handlePlayerChange}>
                     <option value='human'>Human</option>
                     <option value='ai1'  >AI 1</option>
                     <option value='ai2'  >AI 2</option>
