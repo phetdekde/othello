@@ -27,7 +27,6 @@ function App() {
   const connectSocket = async () => {
     const socket = await socketService
     .connect('http://localhost:9000')
-    // .connect('http://phetdekde.trueddns.com:14924/')
     .catch((err) => {
       console.log("Error: ", err);
     });
