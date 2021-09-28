@@ -3,11 +3,11 @@ import gameContext from '../../gameContext';
 import reportWebVitals from '../../reportWebVitals';
 import gameService from '../../services/gameService';
 import socketService from '../../services/socketService';
-import Piece from './Piece';
+import Label from '../../components/Label';
+import Piece from '../../components/Piece';
 import { GameLogic } from './gameLogic'
 import { AI1 } from './ai1';
 import { AI2 } from './ai2';
-import './game.css'
 
 export type IPlayMatrix = Array<Array<number>>;
 export interface IStartGame {
@@ -157,7 +157,6 @@ export function Game() {
                 }
             }
         } else {
-            console.log('I cannot move')
             if(socketService.socket) {
                 if(gameLogic.getMovableCell(playerColor === 1 ? 2 : 1).length !== 0) {
                     gameService.updateGame(socketService.socket, matrix);
@@ -188,9 +187,9 @@ export function Game() {
 
     return (
         <>
-            <div className='game'>
-                {!isReady ? <h2>Waiting for other player to join...</h2> : <h2>Player joined!</h2>}
-                {isGameStarted && (isPlayerTurn ? <h2>Your turn {playerColor === 1 ? 'black' : 'white'}</h2> : <h2>Enemy's turn</h2>)}
+            <div className='game-div'>
+                {!isGameStarted && (!isReady ? <Label label={'Waiting for other player to join...'}/> : <Label label={'Player joined!'}/>)}
+                {isGameStarted && (isPlayerTurn ? <Label label={'Your turn ' + (playerColor === 1 ? 'black' : 'white')}/> : <Label label={"Enemy's turn"}/>)}
                 {(!isGameStarted || !isPlayerTurn) && <div className='overlay'></div>}
                 {matrix.map((row, rowIdx) => {
                     return (

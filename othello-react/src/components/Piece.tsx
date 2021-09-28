@@ -1,5 +1,4 @@
 import React from 'react'
-import './game.css'
 
 type Props = {
     color: number

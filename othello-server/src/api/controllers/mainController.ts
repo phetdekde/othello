@@ -1,5 +1,5 @@
-import { ConnectedSocket, OnConnect, SocketController, OnMessage } from "socket-controllers";
-import { Socket, Server } from 'socket.io';
+import { ConnectedSocket, OnConnect, SocketController } from "socket-controllers";
+import { Socket } from 'socket.io';
 
 @SocketController()
 export class MainController {

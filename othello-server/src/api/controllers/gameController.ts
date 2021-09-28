@@ -11,7 +11,6 @@ export class GameController {
 
     @OnMessage('update_game')
     public async updateGame(
-        @SocketIO() io: Server,
         @ConnectedSocket() socket: Socket,
         @MessageBody() message: any
     ) {
@@ -19,21 +18,18 @@ export class GameController {
         socket.to(gameRoom).emit('on_game_update', message);
     }
 
-    @OnMessage('game_win')
-    public async gameWin(
-        @SocketIO() io: Server,
-        @ConnectedSocket() socket: Socket,
-        @MessageBody() message: any
-    ) {
-        const gameRoom = this.getSocketGameRoom(socket);
-        socket.to(gameRoom).emit('on_game_win', message);
-    }
+    // @OnMessage('game_win')
+    // public async gameWin(
+    //     @ConnectedSocket() socket: Socket,
+    //     @MessageBody() message: any
+    // ) {
+    //     const gameRoom = this.getSocketGameRoom(socket);
+    //     socket.to(gameRoom).emit('on_game_win', message);
+    // }
 
     @OnMessage('reset_game')
     public async resetGame(
-        @SocketIO() io: Server,
         @ConnectedSocket() socket: Socket,
-        @MessageBody() message: any
     ) {
         const gameRoom = this.getSocketGameRoom(socket);
         socket.to(gameRoom).emit('on_game_reset');

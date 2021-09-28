@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import { io } from 'socket.io-client';
+import { useEffect, useState } from 'react';
 import socketService from './services/socketService';
 import { JoinRoom } from './components/JoinRoom';
 import GameContext, { IGameContextProps } from './gameContext';
@@ -54,10 +52,10 @@ function App() {
   }
 
   return (
-    <GameContext.Provider value={gameContextValue}> 
-      <h1 style={{textAlign: 'center'}}>Welcome to Othello</h1>
-      { !isInRoom && <JoinRoom/> }
-      { isInRoom && <Game/> }
+    <GameContext.Provider value={gameContextValue}>
+      <h1 style={{ textAlign: 'center' }}>Welcome to Othello</h1>
+      {!isInRoom && <JoinRoom />}
+      {isInRoom && <Game />}
     </GameContext.Provider>
   );
 }

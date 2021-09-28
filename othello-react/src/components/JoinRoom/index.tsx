@@ -36,13 +36,14 @@ export function JoinRoom(props: IJoinRoomProps) {
 
     return (
         <form onSubmit={joinRoom}>
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <div className='join-room-div'>
                 <h3>Enter room ID</h3>
                 <input value={roomName} onChange={handleRoomNameChange}/>
                 <button 
                     type='submit' 
-                    style={{height: '2rem', width: '6rem', zIndex: 100, marginTop: '2rem'}} 
-                    disabled={isJoining}>{ isJoining ? 'Joining...' : 'JOIN'}</button>
+                    className='button' 
+                    disabled={isJoining}>{ isJoining ? 'Joining...' : 'JOIN'}
+                </button>
             </div>
         </form>
     )
