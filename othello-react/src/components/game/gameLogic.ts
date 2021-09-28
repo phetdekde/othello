@@ -154,6 +154,7 @@ export class GameLogic {
     }
 
     public getMovableCell(color: number) {
+        //return every spots that can be placed
         var movable = [];
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {

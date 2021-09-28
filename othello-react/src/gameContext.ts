@@ -15,6 +15,8 @@ export interface IGameContextProps {
     setGameFinished: (finished: boolean) => void;
     matrix: Array<Array<number>>;
     setMatrix: (matrix: Array<Array<number>>) => void;
+    roomList: Array<string>;
+    setRoomList: (roomList: Array<string>) => void;
 };
 
 const defaultState: IGameContextProps = {
@@ -40,7 +42,9 @@ const defaultState: IGameContextProps = {
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
     ],
-    setMatrix: () => {}
+    setMatrix: () => {},
+    roomList: [],
+    setRoomList: () => {}
 };
 
 export default React.createContext(defaultState);

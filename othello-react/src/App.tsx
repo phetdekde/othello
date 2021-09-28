@@ -3,6 +3,7 @@ import socketService from './services/socketService';
 import { JoinRoom } from './components/JoinRoom';
 import GameContext, { IGameContextProps } from './gameContext';
 import { Game } from './components/game';
+import gameService from './services/gameService';
 
 function App() {
   const [isInRoom, setInRoom] = useState(false);
@@ -21,17 +22,28 @@ function App() {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+  const [roomList, setRoomList] = useState(['']);
 
   const connectSocket = async () => {
     const socket = await socketService
-    .connect('http://localhost:9000')
+    .connect('http://localhost.com:9000')
     .catch((err) => {
       console.log("Error: ", err);
     });
   };
 
+  const handleRoomList = () => {
+    console.log(socketService.socket)
+    if (socketService.socket) {
+      gameService.onGettingRoomList(socketService.socket, (message) => {
+        setRoomList(message);
+      });
+    }
+  }
+
   useEffect(() => {
     connectSocket();
+    handleRoomList();
   }, []);
 
   const gameContextValue: IGameContextProps = {
@@ -49,6 +61,8 @@ function App() {
     setGameFinished,
     matrix,
     setMatrix,
+    roomList,
+    setRoomList,
   }
 
   return (

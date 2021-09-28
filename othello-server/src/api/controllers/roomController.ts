@@ -41,27 +41,4 @@ export class RoomController {
             }
         }
     }
-
-    @OnMessage('start_game')
-    public startGame(
-        @SocketIO() io: Server,
-        @ConnectedSocket() socket: Socket
-    ) {
-        const gameRoom = this.getSocketGameRoom(socket);
-        
-        if(io.sockets.adapter.rooms.get(gameRoom).size === 2) { 
-
-            let rand = Math.floor(Math.random() * 2);
-
-            if(rand === 0) { 
-                //to the sender
-                socket.emit('on_game_start', { start: true, color: 1 }); 
-                //to all clients in gameRoom EXCEPT the sender
-                socket.to(gameRoom).emit('on_game_start', { start: false, color: 2}); 
-            } else {
-                socket.emit('on_game_start', { start: false, color: 2 });
-                socket.to(gameRoom).emit('on_game_start', { start: true, color: 1});
-            }
-        }
-    }
 }
