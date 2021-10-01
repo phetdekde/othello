@@ -2,9 +2,9 @@ import { GameLogic } from "./gameLogic";
 
 export class AI1 {
     public gameLogic:GameLogic;
-
-    constructor(GameLogic: GameLogic) {
-        this.gameLogic = GameLogic;
+    
+    constructor(gameLogic: GameLogic) {
+        this.gameLogic = new GameLogic(gameLogic.getBoard());
     }
 
     public ai1Called(color: number) {

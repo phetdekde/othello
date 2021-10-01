@@ -4,8 +4,8 @@ export class AI2 {
     // 0 ว่าง 1 ดำ 2 ขาว
     public gameLogic:GameLogic;
 
-    constructor(GameLogic: GameLogic) {
-        this.gameLogic = GameLogic;
+    constructor(gameLogic: GameLogic) {
+        this.gameLogic = new GameLogic(gameLogic.getBoard());
     }
 
     //First function will be called here
