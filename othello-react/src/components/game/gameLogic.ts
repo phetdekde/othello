@@ -69,9 +69,9 @@ export class GameLogic {
 
         var columnIterator = col, rowIterator = row;
         while(
-            ((rowIterator    < 7 && rd === 1) || (rowIterator    > 0 && !(rd === 1)))
+            ((rowIterator    < 7 && rd === 1) || (rowIterator    > 0 && rd === -1) || (rd === 0))
                                             &&
-            ((columnIterator < 7 && cd === 1) || (columnIterator > 0 && !(cd === 1)))           
+            ((columnIterator < 7 && cd === 1) || (columnIterator > 0 && cd === -1) || (cd === 0))    
         ) {
             columnIterator += cd;
             rowIterator += rd;
