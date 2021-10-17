@@ -44,7 +44,7 @@ function App() {
 
   useEffect(() => {
     connectSocket();
-    handleRoomList();
+    // handleRoomList();
   }, []);
 
   const gameContextValue: IGameContextProps = {
