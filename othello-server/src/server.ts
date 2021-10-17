@@ -9,6 +9,7 @@ import app from "./app";
 var debug = require("debug")("socketio-server:server");
 // import * as http from "http";
 import socketServer from "./socket";
+const cors = require('cors');
 
 /**
  * Get port from environment and store in Express.
@@ -16,6 +17,7 @@ import socketServer from "./socket";
 
 var port = (process.env.PORT || "9000");
 app.set("port", port);
+app.use(cors());
 
 /**
  * Create HTTP server.
@@ -27,11 +29,11 @@ var server = require('http').createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+const io = socketServer(server);
+
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
-
-const io = socketServer(server);
 
 /**
  * Normalize a port into a number, string, or false.
