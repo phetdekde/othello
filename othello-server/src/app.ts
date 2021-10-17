@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
-  origin: 'https://othello-react.netlify.app/'
+  origin: 'https://othello-react.netlify.app'
 }));
 
 app.use('/', indexRouter);
