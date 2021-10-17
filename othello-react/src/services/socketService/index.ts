@@ -6,7 +6,9 @@ class SocketService {
 
     public connect(url: string): Promise<Socket<DefaultEventsMap, DefaultEventsMap>> {
         return new Promise((rs, rj) => {
-            this.socket = io(url);
+            this.socket = io(url, {
+                withCredentials: true,
+            });
 
             if(!this.socket) return rj();
 
