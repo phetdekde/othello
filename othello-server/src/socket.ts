@@ -5,7 +5,6 @@ export default (httpServer) => {
   const io = new Server(httpServer, {
     cors: {
       origin: "https://othello-react.netlify.app",
-      methods: ["GET", "POST"],
     },
   });
 
