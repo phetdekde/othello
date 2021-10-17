@@ -14,7 +14,7 @@ import socketServer from "./socket";
  * Get port from environment and store in Express.
  */
 
-var port = process.env.PORT || "9000";
+var port = process.env.PORT;
 app.set("port", port);
 
 /**
