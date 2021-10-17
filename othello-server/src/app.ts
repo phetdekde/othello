@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 app.use(cors({
-  origin: 'https://evening-cove-27499.herokuapp.com'
+  origin: 'https://othello-react.netlify.app'
 }));
 
 // view engine setup
