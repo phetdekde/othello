@@ -32,6 +32,7 @@ var server = require('http').createServer(app);
 const io = socketServer(server);
 
 server.listen(port);
+server.set('transports', ['websocket']);
 server.on("error", onError);
 server.on("listening", onListening);
 
