@@ -6,7 +6,6 @@ export default (httpServer) => {
     cors: {
       origin: "*",
       methods: ["GET", "POST"],
-      credentials: true
     },
   });
 
