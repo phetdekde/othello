@@ -7,7 +7,7 @@
 import "reflect-metadata";
 import app from "./app";
 var debug = require("debug")("socketio-server:server");
-import * as https from "https";
+import * as http from "http";
 import socketServer from "./socket";
 
 /**
@@ -21,7 +21,7 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = https.createServer(app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
