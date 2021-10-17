@@ -34,7 +34,7 @@ function App() {
   };
 
   const handleRoomList = () => {
-    console.log(socketService.socket)
+    console.log('ROOM = ' + socketService.socket)
     if (socketService.socket) {
       gameService.onGettingRoomList(socketService.socket, (message) => {
         setRoomList(message);
