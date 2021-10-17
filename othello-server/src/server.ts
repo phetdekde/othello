@@ -9,7 +9,6 @@ import app from "./app";
 var debug = require("debug")("socketio-server:server");
 // import * as http from "http";
 import socketServer from "./socket";
-const cors = require('cors');
 
 /**
  * Get port from environment and store in Express.
@@ -17,7 +16,6 @@ const cors = require('cors');
 
 var port = (process.env.PORT || "9000");
 app.set("port", port);
-app.use(cors());
 
 /**
  * Create HTTP server.
@@ -32,7 +30,6 @@ var server = require('http').createServer(app);
 const io = socketServer(server);
 
 server.listen(port);
-server.set('transports', ['websocket']);
 server.on("error", onError);
 server.on("listening", onListening);
 
