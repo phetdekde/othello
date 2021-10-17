@@ -26,8 +26,8 @@ function App() {
 
   const connectSocket = async () => {
     const socket = await socketService
-    .connect('http://localhost:9000')
-    // .connect('https://evening-cove-27499.herokuapp.com/')
+    // .connect('http://localhost:9000')
+    .connect('https://evening-cove-27499.herokuapp.com/')
     .catch((err) => {
       console.log("Error: ", err);
     });
