@@ -6,7 +6,6 @@ export default (httpServer) => {
     cors: {
       origin: "https://evening-cove-27499.herokuapp.com",
       methods: ["GET", "POST"],
-      credentials: true,
     },
   });
 
