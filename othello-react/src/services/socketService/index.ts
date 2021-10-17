@@ -8,7 +8,6 @@ class SocketService {
         return new Promise((rs, rj) => {
             this.socket = io(url, {
                 withCredentials: true,  
-                transports: ['websocket', 'polling', 'flashsocket'], 
             });
 
             if(!this.socket) return rj();
