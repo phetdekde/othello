@@ -9,7 +9,9 @@ import "reflect-metadata";
 var indexRouter = require('./routes/index');
 
 var app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://evening-cove-27499.herokuapp.com'
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'routes'));
