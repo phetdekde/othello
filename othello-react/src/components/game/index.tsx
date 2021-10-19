@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
 import gameContext from '../../gameContext';
-import reportWebVitals from '../../reportWebVitals';
 import gameService from '../../services/gameService';
 import socketService from '../../services/socketService';
 import Label from '../../components/Label';
@@ -17,14 +16,24 @@ export interface IStartGame {
 
 export function Game() {
 
+    const [matrix, setMatrix] = useState([
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 2, 1, 0, 0, 0],
+        [0, 0, 0, 1, 2, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+      ]);
     const [isReady, setReady] = useState(false);
+    const [selectedPlayer, setSelectedPlayer] = useState('human');
 
     const { 
-        matrix,         setMatrix,
         playerColor,    setPlayerColor, 
         isPlayerTurn,   setPlayerTurn,
         isGameStarted,  setGameStarted,
-        selectedPlayer, setSelectedPlayer, 
+        roomName, 
         isGameFinished, setGameFinished, 
     } = useContext(gameContext);
 
@@ -124,9 +133,9 @@ export function Game() {
     const handleDisconnect = () => {
         if(socketService.socket)
             gameService.onDisconnect(socketService.socket, (message) => {
+                socketService.socket?.disconnect();
                 setPlayerTurn(false);
                 alert(message);
-                socketService.socket?.disconnect();
             });
     }
 
@@ -188,6 +197,7 @@ export function Game() {
     return (
         <>
             <div className='game-div'>
+                <Label label={'Room name : ' + roomName} />
                 {!isGameStarted && (!isReady ? <Label label={'Waiting for other player to join...'}/> : <Label label={'Player joined!'}/>)}
                 {isGameStarted && (isPlayerTurn ? <Label label={'Your turn ' + (playerColor === 1 ? 'black' : 'white')}/> : <Label label={"Enemy's turn"}/>)}
                 {(!isGameStarted || !isPlayerTurn) && <div className='overlay'></div>}

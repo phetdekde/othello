@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useRef, useContext} from 'react'
+import gameContext from '../gameContext';
 
 type Props = {
     roomList: Array<string>
@@ -6,12 +7,21 @@ type Props = {
 }
 
 const RoomList: React.FC<Props> = ({ roomList, joinRoom }) => {
+    const roomNameRef = useRef(null);
+    const { setRoomName } = useContext(gameContext);
+
     return (
         <div style={{display: 'flex', flexDirection: 'row'}}>
             {roomList.map((roomName) => (
                 <>
-                    <h1>{roomName}</h1>
-                    <button onClick={(e) => {joinRoom(e, roomName)}}>JOIN</button>
+                    <h1 ref={roomNameRef}>{roomName}</h1>
+                    <button onClick={(e) => {
+                        setRoomName(roomName); 
+                        joinRoom(e, roomName, true);
+                        }}
+                    >
+                        JOIN
+                    </button>
                 </>                   
             ))}
         </div>

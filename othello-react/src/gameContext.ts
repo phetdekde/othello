@@ -9,12 +9,10 @@ export interface IGameContextProps {
     setPlayerTurn: (turn: boolean) => void;
     isGameStarted: boolean;
     setGameStarted: (started: boolean) => void;
-    selectedPlayer: string;
-    setSelectedPlayer: (selected: string) => void;
     isGameFinished: boolean;
     setGameFinished: (finished: boolean) => void;
-    matrix: Array<Array<number>>;
-    setMatrix: (matrix: Array<Array<number>>) => void;
+    roomName: string;
+    setRoomName: (roomName: string) => void;
     roomList: Array<string>;
     setRoomList: (roomList: Array<string>) => void;
 };
@@ -28,21 +26,10 @@ const defaultState: IGameContextProps = {
     setPlayerTurn: () => {},
     isGameStarted: false,
     setGameStarted: () => {},
-    selectedPlayer: 'human',
-    setSelectedPlayer: () => {},
     isGameFinished: false,
     setGameFinished: () => {},
-    matrix: [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 2, 1, 0, 0, 0],
-        [0, 0, 0, 1, 2, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-    ],
-    setMatrix: () => {},
+    roomName: '',
+    setRoomName: () => {},
     roomList: [],
     setRoomList: () => {}
 };

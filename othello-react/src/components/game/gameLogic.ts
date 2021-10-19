@@ -1,9 +1,3 @@
-import { IPlayMatrix } from './index';
-import gameContext from '../../gameContext';
-import React, { useContext } from 'react'
-import socketService from '../../services/socketService';
-import gameService from '../../services/gameService';
-
 export class GameLogic {
 
     private matrix: Array<Array<number>> = [];

@@ -10,9 +10,9 @@ class GameService {
         socket.on('on_getting_room_list', ({ message }) => listener(message));
     }
 
-    public async joinGameRoom(socket: Socket, roomId: string): Promise<boolean> {
+    public async joinGameRoom(socket: Socket, roomId: string, joinFromRoomlist: boolean): Promise<boolean> {
         return new Promise((rs, rj) => {
-            socket.emit('join_game', { roomId });
+            socket.emit('join_game', { roomId, joinFromRoomlist });
             socket.on('room_joined', () => rs(true)); 
             socket.on('room_join_error', ({error}) => rj(error));
         });

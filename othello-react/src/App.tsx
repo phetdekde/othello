@@ -10,22 +10,12 @@ function App() {
   const [playerColor, setPlayerColor] = useState<1 | 2>(1);
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState('human');
   const [isGameFinished, setGameFinished] = useState(false);
-  const [matrix, setMatrix] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 2, 1, 0, 0, 0],
-    [0, 0, 0, 1, 2, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
+  const [roomName, setRoomName] = useState(''); 
   const [roomList, setRoomList] = useState(['']);
 
   const connectSocket = async () => {
-    const socket = await socketService
+    await socketService
     // .connect('http://localhost:9000')
     .connect('https://evening-cove-27499.herokuapp.com/')
     .catch((err) => {
@@ -56,19 +46,17 @@ function App() {
     setPlayerTurn,
     isGameStarted,
     setGameStarted,
-    selectedPlayer,
-    setSelectedPlayer,
     isGameFinished,
     setGameFinished,
-    matrix,
-    setMatrix,
+    roomName,
+    setRoomName,
     roomList,
     setRoomList,
   }
 
   return (
     <GameContext.Provider value={gameContextValue}>
-      <h1 style={{ textAlign: 'center' }}>Welcome to Othello</h1>
+      <h1 style={{ textAlign: 'center' }}>Othello</h1>
       {!isInRoom && <JoinRoom />}
       {isInRoom && <Game />}
     </GameContext.Provider>
