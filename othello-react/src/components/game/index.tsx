@@ -228,6 +228,10 @@ export function Game() {
                     <option value='ai2'  >AI 2</option>
                 </select>
                 <button className='button' onClick={() => window.location.reload()}>GO BACK</button>
+                <div className='character'>
+                    <img className={`img ${isPlayerTurn?'dark':''}`} src="https://pbs.twimg.com/media/DiQBmWDUYAADjhl.png"></img>
+                    <img className={`img flip ${!isPlayerTurn?'dark':''}`} src="https://pbs.twimg.com/media/DiQBmWDUYAADjhl.png"></img>
+                </div>
             </div>
         </>
     )

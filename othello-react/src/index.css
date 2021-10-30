@@ -88,3 +88,26 @@ code {
   z-index: 100;
   margin-top: 2rem;
 }
+
+.character {
+  position:sticky;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  bottom:0;
+}
+
+.img{
+  height:20%;
+  position:relative;
+}
+
+.dark{
+ filter:brightness(50%);
+  
+}
+
+.flip{
+  transform:rotateY(180deg);
+
+}
