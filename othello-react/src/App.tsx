@@ -16,8 +16,8 @@ function App() {
 
   const connectSocket = async () => {
     await socketService
-    // .connect('http://localhost:9000')
-    .connect('https://evening-cove-27499.herokuapp.com/')
+    .connect('http://localhost:9000')
+    //.connect('https://evening-cove-27499.herokuapp.com/')
     .catch((err) => {
       console.log("Error: ", err);
     });
@@ -56,7 +56,7 @@ function App() {
 
   return (
     <GameContext.Provider value={gameContextValue}>
-      <h1 style={{ textAlign: 'center' }}>Othello</h1>
+      <h1 style={{ textAlign: 'center', color:'#a02b0e'}}>Othello</h1>
       {!isInRoom && <JoinRoom />}
       {isInRoom && <Game />}
     </GameContext.Provider>

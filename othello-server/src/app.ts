@@ -10,8 +10,8 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 app.use(cors({
-  origin: 'https://othello-react.netlify.app'
-  // origin: 'http://localhost:3000'
+  //origin: 'https://othello-react.netlify.app'
+  origin: 'http://localhost:3000'
 }));
 
 // view engine setup
