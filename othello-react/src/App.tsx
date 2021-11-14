@@ -24,7 +24,6 @@ function App() {
   };
 
   const handleRoomList = () => {
-    console.log('ROOM = ' + socketService.socket)
     if (socketService.socket) {
       gameService.onGettingRoomList(socketService.socket, (message) => {
         setRoomList(message);
@@ -56,7 +55,7 @@ function App() {
 
   return (
     <GameContext.Provider value={gameContextValue}>
-      <h1 style={{ textAlign: 'center', color:'#a02b0e'}}>Othello</h1>
+      <h1><span>Othello</span></h1>
       {!isInRoom && <JoinRoom />}
       {isInRoom && <Game />}
     </GameContext.Provider>
