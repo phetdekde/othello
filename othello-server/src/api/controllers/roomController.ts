@@ -1,5 +1,4 @@
-import { connect } from "http2";
-import { ConnectedSocket, MessageBody, OnDisconnect, OnMessage, SocketController, SocketIO } from "socket-controllers";
+import { ConnectedSocket, MessageBody, OnMessage, SocketController, SocketIO } from "socket-controllers";
 import { Server, Socket } from "socket.io";
 
 @SocketController()
@@ -8,6 +7,17 @@ export class RoomController {
         const socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id);
         const gameRoom = socketRooms && socketRooms[0];
         return gameRoom;
+    }
+
+    private async isRoomExisted(io: Server, message: any): Promise<boolean> {
+        var clients = Array.from(await io.sockets.allSockets());
+        var rooms = Array.from(io.sockets.adapter.rooms.keys()).filter((r) => !clients.includes(r));
+        console.log(rooms)
+        if(rooms.includes(message.roomId)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private async roomJoined(socket: Socket, message: any, connectedSockets: Set<String>) {
@@ -36,39 +46,40 @@ export class RoomController {
                     '"', message.roomId, '"');
 
         const connectedSockets = io.sockets.adapter.rooms.get(message.roomId);
-        const socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id);
+        const socketRooms = Array.from(socket.rooms.values()).filter((r) => r !== socket.id);                    
 
-        if(socketRooms.length > 0 || connectedSockets && connectedSockets.size === 2) {
-            socket.emit('room_join_error', {
-                error: "Room is already full :("
-            });
-        } else {
-            /*
-                if player enter the roomId in the input field by themselves
-                    create or join room
-                else
-                    if room doesn't exists yet
-                        they can't create and join room
-                    else
-                        join room
-            */
-            if(!message.joinFromRoomlist) {
-                this.roomJoined(socket, message, connectedSockets);
+        //Is user creating or joining room?
+        if (message.createRoom) {
+            //CREATING
+            if (await this.isRoomExisted(io, message)) {
+                //Room exists, cannot create
+                socket.emit('room_join_error', {
+                    error: "Room name already exists, please try other name :("
+                });
             } else {
-                
-                var clients = Array.from(await io.sockets.allSockets());
-                var rooms = Array.from(io.sockets.adapter.rooms.keys()).filter((r) => !clients.includes(r));
-                
-                if(!rooms.includes(message.roomId)) {
-                    //Room doesn't exists, cannot join
+                //Room doesn't exists, can create
+                this.roomJoined(socket, message, connectedSockets);
+            }
+        } else {
+            //JOINING
+            if (await this.isRoomExisted(io, message)) {
+                //Room exists...
+                if (socketRooms.length > 0 || connectedSockets && connectedSockets.size === 2) {
+                    //cannot join because not full
                     socket.emit('room_join_error', {
-                        error: "Room doesn't exists :("
+                        error: "Room is already full :("
                     });
                 } else {
-                    //Room exists, can join
+                    //can join because not full
                     this.roomJoined(socket, message, connectedSockets);
                 }
+            } else {
+                //Room doesn't exists, cannot join
+                socket.emit('room_join_error', {
+                    error: "Room doesn't exists :("
+                });
             }
         }
+        
     }
 }

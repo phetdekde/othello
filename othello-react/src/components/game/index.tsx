@@ -57,6 +57,7 @@ export function Game() {
 
         var affectedDisks = gameLogic.getAffectedDisks(row, col, playerColor);
         if(affectedDisks.length !== 0) {
+            console.log('PLAYED');
             setPlayerTurn(false);
             var newMatrix = gameLogic.move(row, col, playerColor).getBoard();
             setMatrix(newMatrix);
@@ -154,14 +155,12 @@ export function Game() {
                     let pos = ai1.ai1Called(playerColor);
                     if(pos !== undefined) {
                         clickedSquare(pos.row, pos.col)
-                        console.log('AI1 PLAYED')
                     }
                 } else {
                     var ai2 = new AI2(gameLogic);
                     let pos = ai2.ai2Called(playerColor);
                     if(pos !== undefined) {
                         clickedSquare(pos.row, pos.col)
-                        console.log('AI2 PLAYED')
                     }
                 }
             }

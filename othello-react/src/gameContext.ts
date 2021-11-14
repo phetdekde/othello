@@ -30,7 +30,7 @@ const defaultState: IGameContextProps = {
     setGameFinished: () => {},
     roomName: '',
     setRoomName: () => {},
-    roomList: [],
+    roomList: [''],
     setRoomList: () => {}
 };
 
