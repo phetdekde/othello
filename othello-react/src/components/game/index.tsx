@@ -57,7 +57,6 @@ export function Game() {
 
         var affectedDisks = gameLogic.getAffectedDisks(row, col, playerColor);
         if(affectedDisks.length !== 0) {
-
             var newMatrix = gameLogic.move(row, col, playerColor).getBoard();
             if(socketService.socket) {
                 gameService.updateGame(socketService.socket, matrix);

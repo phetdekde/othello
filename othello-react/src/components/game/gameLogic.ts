@@ -16,7 +16,10 @@ export class GameLogic {
     }
 
     public getBoard() {
-        return this.matrix;
+        const board = this.matrix.map(function(arr) {
+            return arr.slice();
+        });
+        return board;
     }
 
     public getPos(color: number) {

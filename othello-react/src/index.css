@@ -42,8 +42,8 @@ code {
 
 .cell {
   border: 1px solid black;
-  width: 100px;
-  height: 100px;
+  width: 5vmax;
+  height: 5vmax;
   display: flex;
   align-items: center;
   background-color: green;
@@ -98,7 +98,7 @@ code {
 }
 
 .img{
-  height:20%;
+  height: 30vmax;
   position:relative;
 }
 
