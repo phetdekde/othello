@@ -8,25 +8,30 @@ export class Minimax {
         // score
         const PSC = state.getScore(player);
         const OSC = state.getScore(opponent);
-        const SC = (PSC - OSC) / (PSC + OSC);
+        const SCd = PSC + OSC;
+        const SC = (PSC - OSC) / SCd;
+        const cSC = 0.6719*Math.exp(0.0618 * SCd + 3.3723);
         
         // mobility
         const PMB = state.getMovableCell(player).length;
         const OMB = state.getMovableCell(opponent).length;
         const MBd =  PMB + OMB
         const MB = MBd === 0 ? 0 : (PMB - OMB) / MBd;
+        const cMB = 500.3537*Math.exp(-3.1480*Math.pow((SCd- 40.0623), 2) / 4009.5622);
         
         // frontier
         const PFT = state.getFrontierDisc(player).length;
         const OFT = state.getFrontierDisc(opponent).length;
         const FTd = PFT + OFT;
         const FT = FTd === 0 ? 0 : (OFT - PFT) / FTd;
+        const cFT = 450.0882*Math.exp(-3.1375 * Math.pow((SCd - 35.6129), 2) / 299.0685);
         
         // stablility
         const PST = state.getStableDisc(player).length;
         const OST = state.getStableDisc(opponent).length;
         const STd = PST + OST;
         const ST = STd === 0 ? 0 : (PST - OST) / STd;
+        const cST = 561.5805*Math.exp((-1 * Math.pow((64 - SCd), 3.5) / 285326.4547));
 
         // board weighting
         
@@ -52,8 +57,9 @@ export class Minimax {
         ]);
         const BWd = PBW + OBW;
         const BW = BWd === 0 ? 0 : (PBW - OBW) / BWd;
+        const cBW = 92.8481*Math.log10((1.1276*SCd + 0.9270) + 107.0456)
 
-        return SC + MB + FT + ST + BW;
+        return cSC*SC + cMB*MB + cFT*FT + cST*ST + cBW*BW;
     }
 
     private static boardweight(state: GameLogic, player: number, wBoard: Array<Array<number>>) {
