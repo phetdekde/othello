@@ -23,12 +23,11 @@ code {
   flex-direction: column;
   position: relative;
   align-items: center;
-  background-color: whitesmoke;
+  background-color: #a02b0e;
+  color:white; 
+
 }
 
-.label {
-  
-}
 
 .overlay {
   width: 100%; 
@@ -42,8 +41,13 @@ code {
 
 .cell {
   border: 1px solid black;
+<<<<<<< HEAD
   width: 5vmax;
   height: 5vmax;
+=======
+  width: 75px;
+  height: 75px;
+>>>>>>> 1c506831d3d2e03f9af6317119a63b6f1ecf7c38
   display: flex;
   align-items: center;
   background-color: green;
@@ -75,18 +79,77 @@ code {
   margin: 0 auto;
 }
 
-.button {
+/*.button {
   height: 2rem;
   width: 6rem;
   z-index: 100;
   margin-top: 2rem;
+}*/
+
+.button{
+  z-index: 100;
+  text-decoration:none;
+  color:#000;
+  margin:auto;
+  margin-top: 2rem;
+  width:150px;
+  display:inline-block;
+  line-height:40px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  background-color: #fff;
+   border:5px solid #000;
+   box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
+  position: relative;
+}
+
+.button:after{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width:100%;
+   z-index: -1;
+  background-color: #fff;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+}
+.button:hover{
+  background-color: transparent;
+}
+.button:hover:after{
+  background-color: #1dc233;
+}
+
+.button:active{
+   top:5px;
+   left:5px;
+   box-shadow:0 0 0 0;
 }
 
 .dropdown {
-  height: 2rem;
-  width: 6rem;
   z-index: 100;
+  text-decoration:none;
+  color:#000;
+  margin:auto;
   margin-top: 2rem;
+  width:150px;
+  display:inline-block;
+  line-height:40px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  background-color: #fff;
+   border:5px solid #000;
+   box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
+  position: relative;
 }
 
 .character {
@@ -97,9 +160,11 @@ code {
   bottom:0;
 }
 
+
 .img{
   height: 30vmax;
   position:relative;
+  height: 500px;
 }
 
 .dark{
@@ -109,5 +174,30 @@ code {
 
 .flip{
   transform:rotateY(180deg);
+}
 
+.dropdown:after{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width:100%;
+   z-index: -1;
+  background-color: #fff;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+}
+
+.dropdown:hover{
+  background-color: #1dc233;
+}
+
+select:active{
+  top:5px;
+  left:5px;
+  box-shadow:0 0 0 0;
 }
