@@ -43,7 +43,7 @@ export function Game() {
         setSelectedPlayer(e.target.value);
     }
 
-    const clickedSquare = (row: number, col: number) => { 
+    const clickedSquare = async (row: number, col: number) => { 
         /*
             if there is a disk there already OR it's not your turn
                 return
@@ -57,13 +57,12 @@ export function Game() {
 
         var affectedDisks = gameLogic.getAffectedDisks(row, col, playerColor);
         if(affectedDisks.length !== 0) {
+            setPlayerTurn(false);
             var newMatrix = gameLogic.move(row, col, playerColor).getBoard();
+            setMatrix(newMatrix);
             if(socketService.socket) {
                 gameService.updateGame(socketService.socket, matrix);
             }
-
-            setPlayerTurn(false);
-            setMatrix(newMatrix);
         }
     }
 
@@ -155,17 +154,20 @@ export function Game() {
                     let pos = ai1.ai1Called(playerColor);
                     if(pos !== undefined) {
                         clickedSquare(pos.row, pos.col)
+                        console.log('AI1 PLAYED')
                     }
                 } else {
                     var ai2 = new AI2(gameLogic);
                     let pos = ai2.ai2Called(playerColor);
                     if(pos !== undefined) {
                         clickedSquare(pos.row, pos.col)
+                        console.log('AI2 PLAYED')
                     }
                 }
             }
         } else {
             if(socketService.socket) {
+                console.log('NO CELL')
                 if(gameLogic.getMovableCell(playerColor === 1 ? 2 : 1).length !== 0) {
                     gameService.updateGame(socketService.socket, matrix);
                     setPlayerTurn(false);

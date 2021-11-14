@@ -4,8 +4,7 @@ import { Server } from "socket.io";
 export default (httpServer) => {
   const io = new Server(httpServer, {
     cors: {
-      //origin: "https://othello-react.netlify.app",
-      origin: 'http://localhost:3000',
+      origin: ["https://othello-react.netlify.app, 'http://localhost:3000'"],
       methods: ["GET", "POST"],
     },
   });
