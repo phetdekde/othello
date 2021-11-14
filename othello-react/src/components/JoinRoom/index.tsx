@@ -42,15 +42,18 @@ export function JoinRoom(props: IJoinRoomProps) {
                     <h3>Enter room name to create or join room!</h3>
                     <h4>Want to create room? Just type your own room name.</h4>
                     <h4>Want to join room? Just type your friend's room name.</h4>
-                    <input value={roomName} onChange={handleRoomNameChange} />
+                    
+                    <input value={roomName} onChange={handleRoomNameChange} placeholder="RoomName"/>
+                
                     <button
                         type='submit'
-                        className='button'
+                        className='button1'
                         disabled={isJoining}
                     >
                         {isJoining ? 'Joining...' : 'CREATE / JOIN'}
                     </button>
                 </div>
+                
             </form>
             <div className='room-list'>
                 <RoomList roomList={roomList} joinRoom={joinRoom}/>
