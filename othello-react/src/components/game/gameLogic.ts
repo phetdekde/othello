@@ -158,6 +158,97 @@ export class GameLogic {
         return movable;
     }
 
+    public getStableDisc(color: number) {
+        let stable = [];
+        let redundant = [   
+                        [false, false, false, false, false, false, false, false],
+                        [false, false, false, false, false, false, false, false],
+                        [false, false, false, false, false, false, false, false],
+                        [false, false, false, false, false, false, false, false],
+                        [false, false, false, false, false, false, false, false],
+                        [false, false, false, false, false, false, false, false],
+                        [false, false, false, false, false, false, false, false],
+                        [false, false, false, false, false, false, false, false]
+                        ];
+        
+        let i,j;
+        let xlim = 7
+        for(i = 0; i <= 7; i++){
+            for(j = 0; j <= xlim; j++){
+                if(this.matrix[i][j] !== color) break;
+                if(!redundant[i][j]) {
+                    stable.push([i, j]);
+                    redundant[i][j] = true;
+                }
+            }
+            xlim = j - 1;
+            if(xlim < 0) break;
+        }
+
+        xlim = 0
+        for(i = 0; i <= 7; i++){
+            for(j = 7; j >= xlim; j--){
+                if(this.matrix[i][j] !== color) break;
+                if(!redundant[i][j]) {
+                    stable.push([i, j]);
+                    redundant[i][j] = true;
+                }
+            }
+            xlim = j + 1;
+            if(xlim > 8) break;
+        }
+
+        xlim = 7
+        for(i = 7; i >= 0; i--){
+            for(j = 0; j <= xlim; j++){
+                if(this.matrix[i][j] !== color) break;
+                if(!redundant[i][j]) {
+                    stable.push([i, j]);
+                    redundant[i][j] = true;
+                }
+            }
+            xlim = j - 1;
+            if(xlim < 0) break;
+        }
+        
+        xlim = 0
+        for(i = 7; i >= 0; i--){
+            for(j = 7; j >= xlim; j--){
+                if(this.matrix[i][j] !== color) break;
+                if(!redundant[i][j]) {
+                    stable.push([i, j]);
+                    redundant[i][j] = true;
+                }
+            }
+            xlim = j + 1;
+            if(xlim > 8) break;
+        }
+
+        return stable;
+    }
+
+    public getFrontierDisc(color: number) {
+        const owndisc = this.getPos(color);
+        let frontier = [];
+        for(let disc of owndisc) {
+            if(disc.includes(0) || disc.includes(7)) continue;
+
+            let isfound = false;
+            for(let i = -1; i <= 1; i++){
+                for(let j = -1; j <= 1; j++){
+                    if(this.matrix[disc[0] + i][disc[1] + j] === 0) {
+                        frontier.push(disc);
+                        isfound = true;
+                        break;
+                    }
+                }
+                if(isfound) break;
+            }
+        }
+        
+        return frontier;
+    }
+
     public isTerminal() {
         return this.blackPos.length === 0 || this.whitePos.length === 0 || this.blackPos.length + this.whitePos.length === 64;
     }
