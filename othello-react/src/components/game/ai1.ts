@@ -13,7 +13,7 @@ export class AI1 {
         if(cornerplay) {
             let row = cornerplay[0];
             let col = cornerplay[1];
-            console.log("grab corner : (" + row + "," + col + ")");
+            // console.log("grab corner : (" + row + "," + col + ")");
             return {row, col};
         }
 
@@ -21,7 +21,7 @@ export class AI1 {
         if(blockplay) {
             let row = blockplay[0];
             let col = blockplay[1];
-            console.log("blocking : (" + row + "," + col + ")");
+            // console.log("blocking : (" + row + "," + col + ")");
             return {row, col};
         }
 
@@ -29,7 +29,7 @@ export class AI1 {
         if(nextplay) {
             let row = nextplay[0];
             let col = nextplay[1];
-            console.log("best move : (" + row + "," + col + ")");
+            // console.log("best move : (" + row + "," + col + ")");
             return {row, col};
         }
     }
