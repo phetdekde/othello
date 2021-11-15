@@ -7,24 +7,28 @@ type Props = {
 }
 
 const RoomList: React.FC<Props> = ({ roomList, joinRoom }) => {
+
     const roomNameRef = useRef(null);
     const { setRoomName } = useContext(gameContext);
 
     return (
-        <div style={{display: 'flex', flexDirection: 'row'}}>
-            {roomList.map((roomName) => (
-                <>
-                    <h1 ref={roomNameRef}>{roomName}</h1>
-                    <button onClick={(e) => {
-                        setRoomName(roomName); 
-                        joinRoom(e, roomName, true);
-                        }}
-                    >
-                        JOIN
-                    </button>
-                </>                   
-            ))}
-        </div>
+            <>
+            {roomList[0] !== '' ?
+                roomList.map((roomName) => (
+                
+                    <div className="room">
+                            <h4 ref={roomNameRef}>{roomName}</h4>
+                            <button className ='button2'onClick={(e) => {
+                            setRoomName(roomName); 
+                            joinRoom(e, roomName, false);
+                            }}
+                            >Join</button>
+                    </div>
+                        
+                   
+                )) : <></>
+            }
+        </>
     )
 }
 

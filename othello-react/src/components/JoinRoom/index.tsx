@@ -16,7 +16,7 @@ export function JoinRoom(props: IJoinRoomProps) {
         setRoomName(value);
     }
 
-    const joinRoom = async (e: React.FormEvent, roomName: string, joinFromRoomList: boolean) => {
+    const joinRoom = async (e: React.FormEvent, roomName: string, createRoom: boolean) => {
         e.preventDefault();
         const socket = socketService.socket;
         if(!roomName || roomName.trim() === '' || !socket) return;
@@ -24,7 +24,7 @@ export function JoinRoom(props: IJoinRoomProps) {
         setJoining(true);
 
         const joined = await gameService
-        .joinGameRoom(socket, roomName, joinFromRoomList)
+        .joinGameRoom(socket, roomName, createRoom)
         .catch((err) => {
             alert(err);
             window.location.reload();
@@ -37,21 +37,17 @@ export function JoinRoom(props: IJoinRoomProps) {
 
     return (
         <>
-            <form onSubmit={(e) => {joinRoom(e, roomName, false)}}>
-                <div className='join-room-div'>
-                    <h3>Enter room name to create or join room!</h3>
-                    <h4>Want to create room? Just type your own room name.</h4>
-                    <h4>Want to join room? Just type your friend's room name.</h4>
-                    <input value={roomName} onChange={handleRoomNameChange} />
-                    <button
-                        type='submit'
-                        className='button'
-                        disabled={isJoining}
-                    >
-                        {isJoining ? 'Joining...' : 'CREATE / JOIN'}
-                    </button>
-                </div>
-            </form>
+        
+            <div className="join-room-div">
+            <div className="group">      
+                <input value={roomName} onChange={handleRoomNameChange} />
+                <span className="highlight"></span>
+                <span className="bar"></span>
+                <label>RoomName</label>
+            </div>
+                <button className='button1' disabled={isJoining} onClick={(e) => {joinRoom(e, roomName, true)}}>{isJoining ? 'Creating...' : 'CREATE'}</button>
+                <button className='button1' disabled={isJoining} onClick={(e) => {joinRoom(e, roomName, false)}}>{isJoining ? 'Joining...' : 'JOIN'}</button>
+            </div>
             <div className='room-list'>
                 <RoomList roomList={roomList} joinRoom={joinRoom}/>
             </div>
