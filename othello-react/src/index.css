@@ -4,6 +4,8 @@ body {
   justify-content: center;
   align-items: center;
   font-family: "Luckiest Guy", cursive;
+  background-image: url("Wallpaper1.gif");
+  background-attachment: fixed;
 }
 
 code {
@@ -18,12 +20,14 @@ code {
 }
 
 .game-div {
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
   position: relative;
   align-items: center;
-  background-color: #a02b0e;
+  background-color: rgba(31,30,30,0.9);
   color:white; 
+  border-radius:10px;
 
 }
 
@@ -231,6 +235,7 @@ code {
 h1 {
   text-align: center;
   margin: 0;
+  margin-top: 80px;
   text-align: center;
   font-size: 8em;
   padding: 0;
@@ -297,7 +302,7 @@ label 				 {
 input:focus ~ label, input:valid ~ label 		{
   top:-20px;
   font-size:14px;
-  color:#D55C38;
+  color:#ffffff;
 }
 
 /* BOTTOM BARS ================================= */
@@ -306,9 +311,9 @@ input:focus ~ label, input:valid ~ label 		{
   content:'';
   height:2px; 
   width:0;
-  bottom:1px; 
+  bottom:2px; 
   position:absolute;
-  background:#D55C38; 
+  background:#47a7f5; 
   transition:0.2s ease all; 
   -moz-transition:0.2s ease all; 
   -webkit-transition:0.2s ease all;
@@ -317,7 +322,7 @@ input:focus ~ label, input:valid ~ label 		{
   left:50%;
 }
 .bar:after {
-  right:50%; 
+  right:60%; 
 }
 
 /* active state */
@@ -358,15 +363,17 @@ input:focus ~ .highlight {
 }
 
 .room{
-  background: #17AFE8;
+  background: #27bff7;
   color:#fff;
   border-radius: 6px;
   display: inline-block;
   height: 170px;
   margin: 1rem;
-  margin-top: 80px ;
+  margin-top: 30px ;
+  margin-bottom: 30px;
   position: relative;
   width: 300px;
+  opacity: 0.9;
 }
 
 .button2{
@@ -461,7 +468,7 @@ select:active{
 
 
 .room-list{
-  background: #fff;
+  background: rgb(255, 255, 255,0.3);
   flex-direction: row;
   text-align: center;
   margin-top: 20px;
@@ -470,5 +477,6 @@ select:active{
   display:flex;
   flex-wrap: wrap;
   justify-content: center;
+  border-radius :10px;
 }
 
