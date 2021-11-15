@@ -31,7 +31,7 @@ export class AI2 {
             for (let col = 0; col < 8; col++) {
                 if(this.gameLogic.canClickSpot(row, col, color)) {
                     let score = this.scoring(this.gameLogic, row, col, color) + this.minimax(this.gameLogic, 0, false, color, 0);
-                    console.log(score);
+                    // console.log(score);
                     if (bestscore < score) {
                         bestscore = score;
                         bestrow = row;
@@ -42,7 +42,7 @@ export class AI2 {
         }
         
         var pos = {'row': bestrow, 'col': bestcol};
-        console.log(bestscore, pos);
+        // console.log(bestscore, pos);
         // return {row, col}
         if (this.gameLogic.getMovableCell(color).length !== 0) {
             return pos;
