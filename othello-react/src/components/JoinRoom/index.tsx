@@ -37,8 +37,14 @@ export function JoinRoom(props: IJoinRoomProps) {
 
     return (
         <>
+        
             <div className="join-room-div">
+            <div className="group">      
                 <input value={roomName} onChange={handleRoomNameChange} />
+                <span className="highlight"></span>
+                <span className="bar"></span>
+                <label>RoomName</label>
+            </div>
                 <button className='button1' disabled={isJoining} onClick={(e) => {joinRoom(e, roomName, true)}}>{isJoining ? 'Creating...' : 'CREATE'}</button>
                 <button className='button1' disabled={isJoining} onClick={(e) => {joinRoom(e, roomName, false)}}>{isJoining ? 'Joining...' : 'JOIN'}</button>
             </div>

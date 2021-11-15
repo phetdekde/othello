@@ -248,6 +248,7 @@ code {
 
 h1 {
   margin: 0;
+  text-align: center;
   font-size: 8em;
   padding: 0;
   color: white;
@@ -282,7 +283,8 @@ h1 span:last-child {
 
 .group 			  { 
   position:relative; 
-  margin-bottom:45px; 
+  margin-top:165px; 
+  margin-bottom: 70px;
 }
 input 				{
   font-size:18px;
@@ -370,4 +372,76 @@ input:focus ~ .highlight {
 @keyframes inputHighlighter {
 	from { background:#D55C38; }
   to 	{ width:0; background:transparent; }
+}
+
+.room{
+  background: #17AFE8;
+  color:#fff;
+  border-radius: 6px;
+  display: inline-block;
+  height: 170px;
+  margin: 1rem;
+  margin-top: 80px ;
+  position: relative;
+  width: 300px;
+}
+
+.button2{
+  text-decoration:none;
+  color:rgb(0, 0, 0);
+  margin:auto;
+  margin-top: 1rem;
+  width:130px;
+  display:inline-block;
+  line-height:40px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  background-color: #fff;
+  border:5px solid #000;
+  box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
+  position: relative;
+}
+
+.button2:after{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width:100%;
+   z-index: -1;
+  background-color: #fff;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+}
+.button2:hover{
+  background-color: #E85017;
+  color: #fff;
+  
+}
+.button2:hover:after{
+  background-color: #111010;
+}
+
+.button2:active{
+   top:5px;
+   left:5px;
+   box-shadow:0 0 0 0;
+}
+
+.room-list{
+  background: #fff;
+  flex-direction: row;
+  text-align: center;
+  margin-top: 20px;
+  margin-left: 120px;
+  margin-right: 120px;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
