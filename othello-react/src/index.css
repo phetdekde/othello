@@ -1,15 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Luckiest+Guy&display=swap");
 
-/* body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-} */
 body {
-  display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Luckiest Guy", cursive;
@@ -82,13 +73,6 @@ code {
   margin: 0 auto;
 }
 
-/*.button {
-  height: 2rem;
-  width: 6rem;
-  z-index: 100;
-  margin-top: 2rem;
-}*/
-
 .button{
   z-index: 100;
   text-decoration:none;
@@ -102,13 +86,17 @@ code {
   font-weight:900;
   letter-spacing:2px;
   text-transform:uppercase;
-  background-color: #fff;
-   border:5px solid #000;
-   box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
+  background-color:snow;
+  border:5px solid #000;
+  box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
   position: relative;
 }
 
-.button:after{
+.button:disabled {
+  background-color:#333333;
+}
+
+.button:enabled:after{
   content: "";
   position: absolute;
   left: 0;
@@ -116,21 +104,22 @@ code {
   height: 100%;
   width:100%;
    z-index: -1;
-  background-color: #fff;
+  /* background-color: #fff; */
   transition: all 0.5s;
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
 }
-.button:hover{
-  background-color: transparent;
+
+.button:enabled:hover{
+  background-color: snow;
 }
-.button:hover:after{
+.button:enabled:hover:after{
   background-color: #1dc233;
 }
 
-.button:active{
+.button:enabled:active{
    top:5px;
    left:5px;
    box-shadow:0 0 0 0;
@@ -149,8 +138,8 @@ code {
   letter-spacing:2px;
   text-transform:uppercase;
   background-color: #fff;
-   border:5px solid #000;
-   box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
+  border:5px solid #000;
+  box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
   position: relative;
 }
 
@@ -182,6 +171,30 @@ code {
    box-shadow:0 0 0 0;
 }
 
+.character {
+  position:sticky;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  bottom:0;
+}
+
+
+.img{
+  height:20%;
+  position:relative;
+  height: 500px;
+}
+
+.dark{
+ filter:brightness(50%);
+  
+}
+
+.flip{
+  transform:rotateY(180deg);
+}
+
 .dropdown {
   z-index: 100;
   text-decoration:none;
@@ -196,57 +209,28 @@ code {
   letter-spacing:2px;
   text-transform:uppercase;
   background-color: #fff;
-   border:5px solid #000;
-   box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
+  border:5px solid #000;
+  box-shadow:1px 1px 0, 2px 2px 0, 3px 3px 0, 4px 4px 0,5px 5px 0;
   position: relative;
 }
 
-.character {
-  position:sticky;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  bottom:0;
+.dropdown:disabled {
+  background-color: #333333;
+  opacity: 1;
 }
 
-
-.img{
-  height: 30vmax;
-  position:relative;
-}
-
-.dark{
- filter:brightness(50%);
-  
-}
-
-.flip{
-  transform:rotateY(180deg);
-}
-
-.dropdown:after{
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width:100%;
-   z-index: -1;
-  background-color: #fff;
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-}
-
-.dropdown:hover{
+.dropdown:enabled:hover{
   background-color: #1dc233;
 }
 
-
+.dropdown:enabled:active{
+  top:5px;
+  left:5px;
+  box-shadow:0 0 0 0;
+}
 
 h1 {
+  text-align: center;
   margin: 0;
   text-align: center;
   font-size: 8em;
@@ -444,4 +428,11 @@ input:focus ~ .highlight {
   display:flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+/* RESPONSIVE ================ */
+@media screen and (max-width: 1470px) {
+  .character{
+    display: none;
+  }
 }
