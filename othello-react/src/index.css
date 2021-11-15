@@ -157,9 +157,8 @@ code {
 
 
 .img{
-  height:20%;
+  height: 30vmax;
   position:relative;
-  height: 500px;
 }
 
 .dark{
@@ -196,3 +195,41 @@ select:active{
   left:5px;
   box-shadow:0 0 0 0;
 }
+.res{
+  width:20%;
+}
+
+@media screen and (max-width: 1470px) {
+  .left{
+    display: none;
+    margin-left:50px;
+  }
+  .flip{
+    display:none;
+    margin-right: 50px;
+  }
+  .res{
+   display:inline-flex;
+   margin-bottom:10px;
+  }
+  .cell{
+    width: 4vmax;
+    height: 4vmax;
+  }
+}
+
+@media screen and (max-width:460px) {
+  .res{
+   display:block;
+   margin-bottom:60px;
+  }
+}
+
+
+@media screen and (min-width: 1470px) {
+  .res{
+    display:none;
+  }
+}
+
+
