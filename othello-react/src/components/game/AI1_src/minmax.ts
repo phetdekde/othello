@@ -10,7 +10,7 @@ export class Minimax {
         const OSC = state.getScore(opponent);
         const SCd = PSC + OSC;
         const SC = (PSC - OSC) / SCd;
-        const cSC = 0.6719*Math.exp(0.0618 * SCd + 3.3723);
+        const cSC = Math.exp(0.0947 * SCd + 0.5) + 10;
         
         // mobility
         const PMB = state.getMovableCell(player).length;
@@ -31,7 +31,7 @@ export class Minimax {
         const OST = state.getStableDisc(opponent).length;
         const STd = PST + OST;
         const ST = STd === 0 ? 0 : (PST - OST) / STd;
-        const cST = 561.5805*Math.exp((-1 * Math.pow((64 - SCd), 3.5) / 285326.4547));
+        const cST = 504.9039*Math.exp((-1 * Math.pow((64 - SCd), 3.5) / 1462571.8774));
 
         // board weighting
         
@@ -57,8 +57,14 @@ export class Minimax {
         ]);
         const BWd = PBW + OBW;
         const BW = BWd === 0 ? 0 : (PBW - OBW) / BWd;
-        const cBW = 92.8481*Math.log10((1.1276*SCd + 0.9270) + 107.0456)
+        const cBW = 103.3729*Math.log10(1.4839*SCd + 5.0984) + -68.8104;
 
+        // console.log(Math.log10(SCd));
+        // console.log("SC :" + cSC + "*" + SC + "=" + cSC*SC);
+        // console.log("MB :" + cMB + "*" + MB + "=" + cMB*MB);
+        // console.log("FT :" + cFT + "*" + FT + "=" + cFT*FT);
+        // console.log("ST :" + cST + "*" + ST + "=" + cST*ST);
+        // console.log("BW :" + cBW + "*" + BW + "=" + cBW*BW);
         return cSC*SC + cMB*MB + cFT*FT + cST*ST + cBW*BW;
     }
 
@@ -87,6 +93,7 @@ export class Minimax {
                 let childscore = Minimax.MMAB(newstate, player, depth - 1, false, alpha, beta);
                 if(childscore > score) score = childscore;
                 if(score > alpha) alpha = score;
+                // console.log(depth + ":(" + move + ")" + childscore + "?" + score);
                 if(beta <= alpha) break;
             }
         } else {
@@ -97,6 +104,7 @@ export class Minimax {
                 let childscore = Minimax.MMAB(newstate, player, depth - 1, true, alpha, beta);
                 if(childscore < score) score = childscore;
                 if(score < beta) beta = score;
+                // console.log(depth + ":(" + move + ")" + childscore + "?" + score);
                 if(beta <= alpha) break;
             }
         }
@@ -115,6 +123,7 @@ export class Minimax {
                 bestmove = move;
             }
         }
+        // console.log("bestmove : (" + bestmove + ") = " + bestscore);
         return bestmove;
     }
 }

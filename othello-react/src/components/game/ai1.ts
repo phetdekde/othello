@@ -1,6 +1,5 @@
 import { GameLogic } from "./gameLogic";
 import { Minimax } from "./AI1_src/minmax";
-import { platform } from "process";
 
 export class AI1 {
     public currstate:GameLogic;
@@ -14,6 +13,7 @@ export class AI1 {
         if(cornerplay) {
             let row = cornerplay[0];
             let col = cornerplay[1];
+            console.log("grab corner : (" + row + "," + col + ")");
             return {row, col};
         }
 
@@ -21,30 +21,34 @@ export class AI1 {
         if(blockplay) {
             let row = blockplay[0];
             let col = blockplay[1];
+            console.log("blocking : (" + row + "," + col + ")");
             return {row, col};
         }
 
-        const nextplay = Minimax.solve(this.currstate, color, 4);
+        const nextplay = Minimax.solve(this.currstate, color, 6);
         if(nextplay) {
             let row = nextplay[0];
             let col = nextplay[1];
+            console.log("best move : (" + row + "," + col + ")");
             return {row, col};
         }
     }
 
     private playOncorner(color: number) {
-        const corners = [[0,0], [0,7], [7,0], [7,7]];
+        const corners = [[0, 0], [0, 7], [7, 0], [7, 7]]
         const movable = this.currstate.getMovableCell(color);
         let bestmove = null;
         let bestscore = Number.MIN_SAFE_INTEGER;
         for(let move of movable){
-            if(move.includes(0) || move.includes(7)){
-                let newstate = new GameLogic(this.currstate.getBoard());
-                newstate.move(move[0], move[1], color);
-                let mscore = Minimax.hueristic(newstate, color);
-                if(mscore > bestscore) {
-                    bestscore = mscore;
-                    bestmove = move;
+            for(let corner of corners) {
+                if(move[0] === corner[0] && move[1] === corner[1]){
+                    let newstate = new GameLogic(this.currstate.getBoard());
+                    newstate.move(move[0], move[1], color);
+                    let mscore = Minimax.hueristic(newstate, color);
+                    if(mscore > bestscore) {
+                        bestscore = mscore;
+                        bestmove = move;
+                    }
                 }
             }
         }
