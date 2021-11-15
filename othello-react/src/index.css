@@ -1,15 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Luckiest+Guy&display=swap");
 
-/* body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-} */
 body {
-  display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Luckiest Guy", cursive;
@@ -35,7 +26,6 @@ code {
   color:white; 
 
 }
-
 
 .overlay {
   width: 100%; 
@@ -81,13 +71,6 @@ code {
   background-image: radial-gradient(white 30%, #cccccc 70%);
   margin: 0 auto;
 }
-
-/*.button {
-  height: 2rem;
-  width: 6rem;
-  z-index: 100;
-  margin-top: 2rem;
-}*/
 
 .button{
   z-index: 100;
@@ -197,8 +180,9 @@ code {
 
 
 .img{
-  height: 30vmax;
+  height:20%;
   position:relative;
+  height: 500px;
 }
 
 .dark{
@@ -234,24 +218,14 @@ code {
   opacity: 1;
 }
 
-.dropdown:enabled:after{
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width:100%;
-   z-index: -1;
-  background-color: #fff;
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-}
-
 .dropdown:enabled:hover{
   background-color: #1dc233;
+}
+
+.dropdown:enabled:active{
+  top:5px;
+  left:5px;
+  box-shadow:0 0 0 0;
 }
 
 h1 {
@@ -379,4 +353,11 @@ input:focus ~ .highlight {
 @keyframes inputHighlighter {
 	from { background:#D55C38; }
   to 	{ width:0; background:transparent; }
+}
+
+/* RESPONSIVE ================ */
+@media screen and (max-width: 1470px) {
+  .character{
+    display: none;
+  }
 }
