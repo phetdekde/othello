@@ -4,7 +4,7 @@ body {
   justify-content: center;
   align-items: center;
   font-family: "Luckiest Guy", cursive;
-  background-image: url("./Wallpaper1.gif");
+  /* background-image: url("./Wallpaper1.gif"); */
   background-attachment: fixed;
 }
 
