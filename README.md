@@ -1,5 +1,5 @@
 # Play
-(https://othello-react.netlify.app/)
+https://othello-react.netlify.app/
 
 # Setting up
 1. Frontend
