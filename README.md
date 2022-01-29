@@ -1,3 +1,11 @@
+# Setting up
+1. Frontend
+   - cd othello-react
+   - npm start
+2. Backend
+   - cd othello-server
+   - npm start
+
 # AI related files
 [AI1_src](https://github.com/phetdekde/othello/tree/main/othello-react/src/components/game/AI1_src) folder
 
