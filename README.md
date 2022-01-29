@@ -12,3 +12,6 @@
 [ai1.ts](https://github.com/phetdekde/othello/blob/main/othello-react/src/components/game/ai1.ts)
 
 [ai2.ts](https://github.com/phetdekde/othello/blob/main/othello-react/src/components/game/ai2.ts)
+
+# Subject
+Artificial Intelligence
