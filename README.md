@@ -1,3 +1,6 @@
+# Play
+(https://othello-react.netlify.app/)
+
 # Setting up
 1. Frontend
    - cd othello-react
