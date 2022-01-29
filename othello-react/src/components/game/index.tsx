@@ -199,8 +199,9 @@ export function Game() {
             <div className='game-div'>
                 <Label label={'Room name : ' + roomName} />
                 {!isGameStarted && (!isReady ? <Label label={'Waiting for other player to join...'}/> : <Label label={'Player joined!'}/>)}
-                {isGameStarted && (<Label label={'You are' + (playerColor === 1 ? 'black' : 'white')}/>)}
-                {isGameStarted && (isPlayerTurn ? <Label label={'Your turn ' + (playerColor === 1 ? 'black' : 'white')}/> : <Label label={"Enemy's turn"}/>)}
+                {isGameStarted && (<Label label={'You are ' + (playerColor === 1 ? 'black' : 'white')}/>)}
+                {/* {isGameStarted && (isPlayerTurn ? <Label label={'Your turn ' + (playerColor === 1 ? 'black' : 'white')}/> : <Label label={"Enemy's turn"}/>)} */}
+                {isGameStarted && (isPlayerTurn ? <Label label='Your turn'/> : <Label label="Enemy's turn"/>)}
                 {(!isGameStarted || !isPlayerTurn) && <div className='overlay'></div>}
                 {matrix.map((row, rowIdx) => {
                     return (
