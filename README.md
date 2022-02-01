@@ -4,9 +4,11 @@ https://othello-react.netlify.app/
 # Setting up
 1. Frontend
    - cd othello-react
+   - npm install
    - npm start
 2. Backend
    - cd othello-server
+   - npm install
    - npm start
 
 # AI related files
