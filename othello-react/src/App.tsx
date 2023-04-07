@@ -17,7 +17,7 @@ function App() {
   const connectSocket = async () => {
     await socketService
 //     .connect('http://localhost:9000')
-    .connect('https://evening-cove-27499.herokuapp.com/')
+    .connect('https://othello-server-fr9m.onrender.com/')
     .catch((err) => {
       console.log("Error: ", err);
     });
